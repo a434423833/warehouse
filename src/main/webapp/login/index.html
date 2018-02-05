@@ -58,10 +58,10 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                 },
                 success: function (obj) {
                     if (obj.code == '0') {
-                        alert("登陆成功");
+                        window.location.href = "../zhuti/index.html";
                     } else {
                         $("#username").val(account);
-                        $("#username").val(password);
+                        $("#password").val(password);
                         $("#tishi").html(obj.msg)
                     }
 

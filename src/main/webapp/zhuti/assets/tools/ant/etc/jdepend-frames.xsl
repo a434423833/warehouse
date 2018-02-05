@@ -34,7 +34,7 @@
 <xsl:param name="output.dir" select="'.'"/>
 
 <xsl:template match="JDepend">
-   <!-- create the index.html -->
+   <!-- create index_副本.htmlhtml -->
    <redirect:write file="{$output.dir}/index.html">
       <xsl:call-template name="index.html"/>
    </redirect:write>

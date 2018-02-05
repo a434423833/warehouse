@@ -5,7 +5,7 @@
     <artifactId>warehouse</artifactId>
     <packaging>jar</packaging>
     <version>1.0-SNAPSHOT</version>
-    <name>kjJSP Maven Webapp</name>
+    <name>warehouse Maven Webapp</name>
     <url>http://maven.apache.org</url>
 
     <properties>

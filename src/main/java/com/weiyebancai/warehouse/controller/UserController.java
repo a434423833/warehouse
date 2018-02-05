@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
 
@@ -26,6 +27,21 @@ public class UserController {
     @Autowired
     private UserServer userServer;
 
+    /**
+     * 首页
+     */
+    @RequestMapping(value = "")
+    public ModelAndView index() {
+        return new ModelAndView("redirect:login/index_副本.html");
+    }
+
+    /**
+     * 登陆
+     *
+     * @param userDTO
+     * @param session
+     * @return
+     */
     @RequestMapping(value = "/userLogin")
     public Result userLogin(UserDTO userDTO, HttpSession session) {
         Assert.notNull(userDTO, "DTO不能为null");

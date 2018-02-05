@@ -1,0 +1,138 @@
+/**
+ * 调拨单-列表
+ */
+define(['app', 'directives/biz-Select', 
+        'services/CommonService', 
+        'services/service',
+        'services/WarehouseInventoryService',
+        'services/popup/modifyWarehouseInvertory/PopupService',
+        'services/popup/transferInventory/PopupService',
+        ], function (app) {
+    app.controller('InventoryListController', ['$http','$scope','$filter', '$rootScope', '$state','ModifyWarehouseInvertoryService','TransferInventoryService','WarehouseInventoryService','popupWinService','QueryDataService', 'BizSelectService', 'CommonService','pagedataLoading',
+        function ($http,$scope,$filter, $rootScope, $state,ModifyWarehouseInvertoryService,TransferInventoryService,WarehouseInventoryService,popupWinService, QueryDataService, BizSelectService,  CommonService,pagedataLoading) {
+            
+            $scope.vo = {};
+            $scope.vm = {};
+            $scope.cityVo = {};
+            $scope.vo.state = 0;
+            
+            //获取登陆用户
+            $scope.userInfo=angular.fromJson(localStorage.getItem("userInfo"));
+
+           //查询
+            $scope.searchClick = function () {
+            	$scope.vm.pages.index=1;
+            	if ($scope.vo.secondCategoryId) {
+                    $scope.vo.categoryId = $scope.vo.secondCategoryId;
+                } else if ($scope.vo.firstCategoryId) {
+                    $scope.vo.categoryId = $scope.vo.firstCategoryId;
+                } else {
+                    $scope.vo.categoryId = "";
+                }
+                $scope.query();
+            };
+            
+            //重置
+            $scope.resetClick = function () {
+                $scope.vo = {};
+                $scope.categoryVo = {};
+                $scope.vm.pages.index=1;
+                $scope.query();
+            };
+
+            $scope.$on('$viewContentLoaded', function () {
+                $scope.query();
+            });
+            
+            QueryDataService.initSearchData($scope);// 初始化数据
+            $scope.query = function () {
+            	if ($scope.vo.secondCategoryId) {
+                    $scope.vo.categoryId = $scope.vo.secondCategoryId;
+                } else if ($scope.vo.firstCategoryId) {
+                    $scope.vo.categoryId = $scope.vo.firstCategoryId;
+                } else {
+                    $scope.vo.categoryId = "";
+                }
+                $scope.vo.cityId=$scope.cityVo.cityId?$scope.cityVo.cityId:null;
+                $scope.vo.currentPage=$scope.vm.pages.index;
+                $scope.vo.pageSize=$scope.vm.pages.pageSize;
+                QueryDataService.storeSearchData($scope);
+                $scope.vm.items={};
+                pagedataLoading.loading();
+                WarehouseInventoryService.getList($scope.vo).then(function (response) {
+            		pagedataLoading.unloading(); 
+                    if (response.success == true) {
+                        var trItems = [];
+                        var seq = 0;
+                        $scope.vm.items = response.data? response.data.dataList:null;
+                        $scope.vm.pages.recordCount = response.data? response.data.pager.recordCount:0;
+                        $scope.vm.pages.currentPage = response.data? response.data.pager.currentPage:0;
+                        $scope.vm.pages.totalPage = response.data? response.data.pager.totalPage:0;
+                        angular.forEach($scope.vm.items,function(item){
+                        	 seq++;
+                        	 item.rowspan=0;
+                        	 //有仓库列表
+                        	if(item.warehouseInformationDTO.warehouseInformationDTOS.length>0){
+                        		
+		                        angular.forEach(item.warehouseInformationDTO.warehouseInformationDTOS,function(perItem){
+		                        	perItem.productBrand=item.productBrand;
+		                        	perItem.productName=item.productName;
+		                        	perItem.specName=item.specName;
+		                        	perItem.cityName=item.cityName;
+		                        	perItem.productSkuId=item.productSkuId;
+		                        	trItems.push(perItem);
+		                        	if (!item.rowspan) {
+                                        item.rowspan = 1;
+                                        perItem.item = item;
+                                    } else {
+                                    	item.rowspan++;
+                                    }
+		                        	
+		                            item.seq = ($scope.vm.pages.index - 1) * $scope.vm.pages.itemsPerPage + seq;
+		                        });
+                            }else{
+                            //无仓库列表
+                            	 item.rowspan = 1;
+	                        	 item.seq = ($scope.vm.pages.index - 1) * $scope.vm.pages.itemsPerPage + seq;
+	                        	 trItems.push({"item": item});
+                             }
+                             item.seq = ($scope.vm.pages.index - 1) * $scope.vm.pages.itemsPerPage + seq;
+                         });
+                        $scope.vm.items = trItems;
+                       
+                    }else{
+                    	 bootbox.alert(response.exception);
+                    }
+                });
+            
+            };
+            
+            //编辑库存
+            $scope.editSkuStock=function(item){
+            	if(!item.warehouseId){
+            		 bootbox.alert("找不到仓库Id!")
+            				 return;
+            	}
+            	ModifyWarehouseInvertoryService.popup(item).then(function(data){
+            		  if(data.success==true){
+            				  $scope.query();
+            		  }else{
+            			  bootbox.alert(data.error);
+            		  }
+            	})
+            }
+            
+            //转移库存
+            $scope.transferInventory=function(item){
+            	TransferInventoryService.popup(item).then(function(data){
+            		  if(data.success==true){
+            				 $scope.query();
+            		  }else{
+            			  bootbox.alert(data.error);
+            		  }
+            	})
+            }
+            
+          
+        }]);
+});

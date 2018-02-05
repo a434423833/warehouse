@@ -1,127 +1,337 @@
-<!DOCTYPE HTML>
-<html>
- <head>
-  <title> 首页代码结构</title>
-   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-       <link href="../assets/css/dpl-min.css" rel="stylesheet" type="text/css" />
-    <link href="../assets/css/bui-min.css" rel="stylesheet" type="text/css" />
-    <link href="../assets/css/page-min.css" rel="stylesheet" type="text/css" />   <!-- 下面的样式，仅是为了显示代码，而不应该在项目中使用-->
-   <link href="../assets/css/prettify.css" rel="stylesheet" type="text/css" />
-   <style type="text/css">
-    code {
-      padding: 0px 4px;
-      color: #d14;
-      background-color: #f7f7f9;
-      border: 1px solid #e1e1e8;
-    }
-   </style>
- </head>
- <body>
-  
-    
-    <div class="container">
-     <div class="row">
-       <div class="span4">
-         <h2>整体结构</h2>
-         <ol>
-           <li>页面声明</li>
-           <li>首页title</li>
-           <li>登录信息</li>
-           <li>顶部导航</li>
-           <li>二级菜单</li>
-           <li>tab</li>
-           <li>首页JS配置项</li>
-         </ol>
-       </div>
-       <div class="span20">
-         <pre class="prettyprint linenums">
-&lt;!DOCTYPE HTML&gt;
-&lt;html&gt;
- &lt;head&gt;
-  &lt;title&gt; HTC 管理系统&lt;/title&gt;
-   &lt;meta http-equiv="Content-Type" content="text/html; charset=utf-8" /&gt;
-   &lt;link href="assets/css/dpl-min.css" rel="stylesheet" type="text/css" /&gt;
-   &lt;link href="assets/css/bui-min.css" rel="stylesheet" type="text/css" /&gt;
-   &lt;link href="assets/css/main.css" rel="stylesheet" type="text/css" /&gt;
- &lt;/head&gt;
- &lt;body&gt;
-   &lt;div class="header"&gt;
-    &lt;div class="dl-title"&gt;&lt;span class=""&gt;前端框架&lt;/span&gt;&lt;/div&gt;
-    &lt;div class="dl-log"&gt;欢迎您，&lt;span class="dl-log-user"&gt;XXX&lt;/span&gt;
-        &lt;a href="###" title="退出系统" class="dl-log-quit"&gt;[退出]&lt;/a&gt;
-    &lt;/div&gt;
-   &lt;/div&gt;
-   &lt;div class="content"&gt;
-    &lt;div class="dl-main-nav"&gt;
-      &lt;ul id="J_Nav"  class="nav-list ks-clear"&gt;
-        &lt;li class="nav-item dl-selected"&gt;&lt;div class="nav-item-inner nav-storage"&gt;首页&lt;/div&gt;&lt;/li&gt;
-        &lt;li class="nav-item"&gt;&lt;div class="nav-item-inner nav-inventory"&gt;搜索页&lt;/div&gt;&lt;/li&gt;
-      &lt;/ul&gt;
-    &lt;/div&gt;
-    &lt;ul id="J_NavContent" class="dl-tab-conten"&gt;
+<!DOCTYPE html>
+<!-- saved from url=(0067)http://scop.test.yijiupidev.com/templates/index.html#/inventoryList -->
+<html lang="zh-cn"><!--<![endif]--><!-- BEGIN HEAD -->
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>伟业查询后台</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
 
-    &lt;/ul&gt;
-      
-   &lt;/div&gt;
-  &lt;script type="text/javascript" src="assets/js/jquery-1.8.1.min.js"&gt;&lt;/script&gt;
-  &lt;script type="text/javascript" src="assets/js/bui-min.js"&gt;&lt;/script&gt;
-  &lt;script type="text/javascript" src="assets/js/config-min.js"&gt;&lt;/script&gt;
-  &lt;script&gt;
-     BUI.use('common/main',function(){
-      var config = [{
-          id:'menu',
-          menu:[{
-              text:'首页内容',
-              items:[
-                {id:'main-menu',text:'顶部导航',href:'main/menu.php'},
-                {id:'second-menu',text:'二级菜单',href:'main/second-menu.php'}
-              ]
-            }]
-          },{
-            id:'search',
-            menu:[{
-                text:'搜索页面',
-                items:[
-                  {id:'introduce',text:'搜索页面简介',href:'search/introduce.html'}
-                ]
-              }]
-          }];
-      new PageUtil.MainPage({
-        modulesConfig : config
-      });
-    });
+    <!-- BEGIN GLOBAL MANDATORY STYLES -->
+    <link href="weiyebancai/font-opensans.css" rel="stylesheet" type="text/css">
+    <link href="weiyebancai/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="weiyebancai/simple-line-icons.min.css" rel="stylesheet" type="text/css">
+    <link href="weiyebancai/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="weiyebancai/bootstrap.fileinput.min.css" rel="stylesheet" type="text/css">
+    <link href="weiyebancai/uniform.default.css" rel="stylesheet" type="text/css">
+    <link href="weiyebancai/bootstrap-switch.min.css" rel="stylesheet" type="text/css">
 
-  &lt;/script&gt;
- &lt;/body&gt;
-&lt;/html&gt;
+    <link href="weiyebancai/angular-block-ui.min.css" rel="stylesheet" type="text/css">
+    <link href="weiyebancai/angular-toastr.css" rel="stylesheet" type="text/css">
+    <link href="weiyebancai/select.min.css" rel="stylesheet" type="text/css">
+    <link href="weiyebancai/select.css" rel="stylesheet" type="text/css">
+    <link href="weiyebancai/selectize.default.css" rel="stylesheet" type="text/css">
+    <link href="weiyebancai/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css">
+    <link href="weiyebancai/bootstrap-datepicker3.min.css" rel="stylesheet" type="text/css">
+    <link href="weiyebancai/select2.css" rel="stylesheet" type="text/css">
+    <link href="weiyebancai/select2-bootstrap.css" rel="stylesheet" type="text/css">
+    <link href="weiyebancai/components-rounded.css" id="style_components" rel="stylesheet" type="text/css">
+    <link href="weiyebancai/plugins.css" rel="stylesheet" type="text/css">
+    <link href="weiyebancai/weui.css" rel="stylesheet" type="text/css">
+    <link href="weiyebancai/custom.css" rel="stylesheet" type="text/css">
+    <link href="weiyebancai/layout.css" rel="stylesheet" type="text/css">
+    <link href="weiyebancai/darkblue.css" rel="stylesheet" type="text/css" id="style_color">
+    <link href="weiyebancai/custom(1).css" rel="stylesheet" type="text/css">
+    <link href="weiyebancai/SelectSearch.css" rel="stylesheet" type="text/css">
+    <link href="weiyebancai/add-picture.css" rel="stylesheet" type="text/css">
 
-         </pre>
-       </div>
-     </div>
-     <div class="row">
-       <div class="span24">
-         <h2>几点说明</h2>
-         <ol>
-           <li>文档声明为 <code>&lt;!doctype html&gt;</code>,文件格式是utf-8</li>
-           <li>css文件在 title中引入，js在页面底部引入</li>
-           <li>页面引入的 prettify.js和prettify.css仅是为了展示代码使用</li>
-         </ol>
-       </div>
-     </div>
+
+</head>
+<!-- END HEAD -->
+<!-- BEGIN BODY -->
+<body data-ng-controller="AppController"
+      class="page-header-fixed page-style-square ng-scope block-ui block-ui-anim-fade"
+      data-ng-class="{&#39;page-sidebar-closed&#39;: settings.layout.pageSidebarClosed}" block-ui="main"
+      aria-busy="false" style="">
+
+<div class="page-content-wrapper">
+    <div class="page-content" id="dataLoading" style="min-height:813px">
+        <div data-ui-view="" class="fade-in-up ng-scope">
+            <div data-page-top="">
+                <h3 class="page-title ng-binding" data-ng-bind="$state.current.data.pageTitle">仓库库存</h3>
+            </div>
+            <div class="row" data-page-content="">
+                <div class="col-md-12">
+                    <div class="portlet light bordered">
+                        <div class=" portlet-title">
+                            <div class=" caption " data-ng-hide="$state.current.data.captionHelper">
+                                <span class=" caption-subject font-green-sharp bold uppercase"> 搜索 </span>&nbsp;
+                                <span class=" caption-helper"> 输入搜索信息 </span>
+                            </div>
+                            <!-- ngIf: $state.current.data.captionHelper -->
+                        </div>
+                        <div class="portlet-body" data-ng-transclude="">
+                            <form onkeydown="if(event.keyCode==13){return false;}"
+                                  class="form-horizontal data-ng-pristine data-ng-valid searchbox ng-pristine ng-valid"
+                                  data-page-search="">
+                                <div class="form-body" data-ng-transclude="">
+                                    <div class="row ng-scope">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label">产品名称：</label>
+                                                <div class="col-md-9">
+                                                    <input type="text" name="product_name"
+                                                           class="form-control "
+                                                           placehold="产品名称" id="productName">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label">品牌：</label>
+                                                <div class="col-md-9">
+                                                    <input type="text" name="brand"
+                                                           class="form-control ng-pristine ng-untouched ng-valid"
+                                                           ng-model="vo.productBrand">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row ng-scope">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label">类目：</label>
+                                                <div class="col-md-9">
+                                                    <product-display-category display-category-vo="vo"
+                                                                              display-partner-category-id="vo.firstCategoryId"
+                                                                              display-subcategory-id="vo.secondCategoryId"
+                                                                              class="ng-isolate-scope">
+                                                        <div class="row">
+                                                            <div class="col-md-6"><select
+                                                                    class="form-control ng-pristine ng-valid ng-touched"
+                                                                    ng-change="jiupiCityVo.cityId=null;changeJiupiProvince(jiupiCityVo);"
+                                                                    ng-model="jiupiCityVo.provinceObj"
+                                                                    ng-disabled="isDisabled"
+                                                                    ng-options="provinceItem as provinceItem.province for provinceItem in allJiupiCityList track by provinceItem.province">
+                                                                <option value="" ng-hide="hidePleaseSelect" class="">
+                                                                    请选择
+                                                                </option>
+                                                                <option value="店内" label="店内">店内</option>
+                                                                <option value="仓库" label="仓库">仓库</option>
+                                                            </select></div>
+                                                        </div>
+                                                    </product-display-category>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label">所在仓库:</label>
+                                                <div class="col-md-9">
+                                                    <ejp-jiupi-city-select jiupi-city-vo="cityVo"
+                                                                           hide-please-select="false"
+                                                                           change-jiupi-province=""
+                                                                           change-jiupi-city="" is-disabled="false"
+                                                                           class="ng-isolate-scope">
+                                                        <div class="row">
+                                                            <!-- 酒批城市选择控件 -->
+                                                            <div class="col-md-6"><select
+                                                                    class="form-control ng-pristine ng-valid ng-touched"
+                                                                    ng-change="jiupiCityVo.cityId=null;changeJiupiProvince(jiupiCityVo);"
+                                                                    ng-model="jiupiCityVo.provinceObj"
+                                                                    ng-disabled="isDisabled"
+                                                                    ng-options="provinceItem as provinceItem.province for provinceItem in allJiupiCityList track by provinceItem.province">
+                                                                <option value="" ng-hide="hidePleaseSelect" class="">
+                                                                    请选择
+                                                                </option>
+                                                                <option value="店内" label="店内">店内</option>
+                                                                <option value="仓库" label="仓库">仓库</option>
+                                                            </select></div>
+                                                            <div class="col-md-6">
+                                                            </div>
+                                                        </div>
+                                                    </ejp-jiupi-city-select>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                                <div class="form-actions">
+                                    <div class="row">
+                                        <div class="col-md-7 col-md-offset-5">
+                                            <button type="button" class="btn btn-primary"
+                                                    data-ng-click="searchClick()"> 查询
+                                            </button>
+                                            <button type="button" class="btn btn-default"
+                                                    data-ng-click="resetClick()">清空
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+
+                            <div class="table-container ng-scope" ng-init="findList()">
+                                <table class="table table-bordered table-hover table-striped " id="datatable_ajax">
+                                    <thead>
+                                    <tr class="heading">
+                                        <th>序号</th>
+                                        <th>品牌</th>
+                                        <th>种类</th>
+                                        <th>产品名称</th>
+                                        <th>所剩库存</th>
+                                        <th>所在仓库</th>
+                                        <th>负责人</th>
+                                        <th>操作</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr data-ng-repeat="item in vm.items" class="odd gradeX ng-scope">
+                                        <td data-ng-bind="item.item.seq" rowspan="1" ng-hide="!item.item.rowspan"
+                                            class="ng-binding">1
+                                        </td>
+                                        <td data-ng-bind="item.item.productBrand" rowspan="1"
+                                            ng-hide="!item.item.rowspan" class="ng-binding">伟业
+                                        </td>
+                                        <td data-ng-bind="item.item.productName" rowspan="1"
+                                            ng-hide="!item.item.rowspan" class="ng-binding">油漆
+                                        </td>
+                                        <td data-ng-bind="item.item.specName" rowspan="1" ng-hide="!item.item.rowspan"
+                                            class="ng-binding">XXX油漆
+                                        </td>
+                                        <td data-ng-bind="item.item.cityName" rowspan="1" ng-hide="!item.item.rowspan"
+                                            class="ng-binding">12
+                                        </td>
+                                        <td data-ng-bind="item.warehouseName" class="ng-binding">仓库</td>
+                                        <td data-ng-bind="item.ownerName" class="ng-binding">仓管</td>
+                                        <td>
+                                            <a> 库存变更明细</a>
+                                            <a> 变更库存</a>
+                                            <a>库存转移</a>
+                                        </td>
+
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <ul class="pagination-sm pull-right pagination ng-isolate-scope ng-valid"
+                                boundary-links="true" items-per-page="vm.pages.itemsPerPage"
+                                total-items="vm.pages.recordCount" ng-model="vm.pages.index" previous-text="‹"
+                                next-text="›" first-text="«" last-text="»" ng-change="query()">
+                                <!-- ngIf: boundaryLinks -->
+                                <li ng-if="boundaryLinks" ng-class="{disabled: noPrevious()}"
+                                    class="ng-scope disabled"><a
+                                        href="http://scop.test.yijiupidev.com/templates/index.html"
+                                        ng-click="selectPage(1)" class="ng-binding">«</a></li>
+                                <!-- end ngIf: boundaryLinks -->
+                                <!-- ngIf: directionLinks -->
+                                <li ng-if="directionLinks" ng-class="{disabled: noPrevious()}"
+                                    class="ng-scope disabled"><a
+                                        href="http://scop.test.yijiupidev.com/templates/index.html"
+                                        ng-click="selectPage(page - 1)" class="ng-binding">‹</a></li>
+                                <!-- end ngIf: directionLinks -->
+                                <!-- ngRepeat: page in pages track by $index -->
+                                <li ng-repeat="page in pages track by $index" ng-class="{active: page.active}"
+                                    class="ng-scope active"><a
+                                        href="http://scop.test.yijiupidev.com/templates/index.html"
+                                        ng-click="selectPage(page.number)" class="ng-binding">1</a></li>
+                                <!-- end ngRepeat: page in pages track by $index -->
+                                <!-- ngIf: directionLinks -->
+                                <li ng-if="directionLinks" ng-class="{disabled: noNext()}"
+                                    class="ng-scope disabled"><a
+                                        href="http://scop.test.yijiupidev.com/templates/index.html"
+                                        ng-click="selectPage(page + 1)" class="ng-binding">›</a></li>
+                                <!-- end ngIf: directionLinks -->
+                                <!-- ngIf: boundaryLinks -->
+                                <li ng-if="boundaryLinks" ng-class="{disabled: noNext()}" class="ng-scope disabled">
+                                    <a href="http://scop.test.yijiupidev.com/templates/index.html"
+                                       ng-click="selectPage(totalPages)" class="ng-binding">»</a></li>
+                                <!-- end ngIf: boundaryLinks -->
+                            </ul>
+                            <h5 class="ng-binding ng-scope">每页 20条 | 共 条记录
+                                | 当前第 1 页 | 共 0 页</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END ACTUAL CONTENT -->
+        </div>
+        <!-- <pagedata-loading></pagedata-loading> -->
     </div>
-  <script type="text/javascript" src="../assets/js/jquery-1.8.1.min.js"></script>
-  <script type="text/javascript" src="../assets/js/bui-min.js"></script>
-  <script type="text/javascript" src="../assets/js/config-min.js"></script>
-  <script type="text/javascript">
-    BUI.use('common/page');
-  </script>
-  <!-- 仅仅为了显示代码使用，不要在项目中引入使用-->
-  <script type="text/javascript" src="../assets/js/prettify.js"></script>
-  <script type="text/javascript">
-    $(function () {
-      prettyPrint();
-    });
-  </script>  
 
-<body>
-</html>  
+    <!-- END CONTENT -->
+</div>
+<!-- END CONTAINER -->
+<!-- BEGIN FOOTER -->
+<div class="page-footer" style="">
+    <div class="page-footer-inner">Copyright <sup>©</sup> 2016 北京易久批电子商务有限公司.</div>
+    <div class="scroll-to-top">
+        <i class="icon-arrow-up"></i>
+    </div>
+</div>
+<!-- END FOOTER -->
+<!-- BEGIN CORE PLUGINS -->
+<!--[if lt IE 9]>
+<script src="../assets/global/plugins/respond.min.js"></script>
+<script src="../assets/global/plugins/excanvas.min.js"></script>
+<![endif]-->
+<script src="weiyebancai/underscore-1.8.3.min.js.下载" type="text/javascript"></script>
+<script src="weiyebancai/jquery.js.下载" type="text/javascript"></script>
+<script src="weiyebancai/bootstrap.min.js.下载" type="text/javascript"></script>
+<script src="weiyebancai/bootstrap-hover-dropdown.min.js.下载" type="text/javascript"></script>
+
+<script src="weiyebancai/ajaxfileupload.js.下载" type="text/javascript"></script>
+<script src="weiyebancai/jquery-migrate.min.js.下载" type="text/javascript"></script>
+<script src="weiyebancai/jquery.slimscroll.min.js.下载" type="text/javascript"></script>
+<script src="weiyebancai/jquery.blockui.min.js.下载" type="text/javascript"></script>
+<!-- <script src="../assets/global/plugins/jquery.cookie.min.js" type="text/javascript"></script> -->
+
+<!-- END CORE PLUGINS -->
+<!-- BEGIN CORE ANGULARJS PLUGINS -->
+<script src="weiyebancai/angular.js.下载" type="text/javascript"></script>
+<script src="weiyebancai/angular-cookies.min.js.下载" type="text/javascript"></script>
+<script src="weiyebancai/angular-sanitize.min.js.下载" type="text/javascript"></script>
+<script src="weiyebancai/angular-touch.min.js.下载" type="text/javascript"></script>
+<script src="weiyebancai/angular-messages.min.js.下载" type="text/javascript"></script>
+<script src="weiyebancai/angular-ui-router.js.下载" type="text/javascript"></script>
+<script src="weiyebancai/angular-block-ui.min.js.下载" type="text/javascript"></script>
+<script src="weiyebancai/angular-toastr.js.下载" type="text/javascript"></script>
+<script src="weiyebancai/angular-toastr.tpls.js.下载" type="text/javascript"></script>
+<script src="weiyebancai/angular-breadscrumb.min.js.下载" type="text/javascript"></script>
+<!-- <script src="../assets/global/plugins/angularjs/plugins/ocLazyLoad.min.js" type="text/javascript"></script> -->
+<script src="weiyebancai/bindonce.min.js.下载" type="text/javascript"></script>
+<script src="weiyebancai/ui-bootstrap-tpls.min.js.下载" type="text/javascript"></script>
+<script src="weiyebancai/select.js.下载" type="text/javascript"></script>
+
+<script src="weiyebancai/bootstrap-datepicker.js.下载" type="text/javascript"></script>
+<script src="weiyebancai/jquery.cityselect.js.下载" type="text/javascript"></script>
+<script src="weiyebancai/jquery.cityselect.init.js.下载" type="text/javascript"></script>
+
+<script src="weiyebancai/bootbox.min.js.下载" type="text/javascript"></script>
+<script src="weiyebancai/bootstrap-switch.min.js.下载" type="text/javascript"></script>
+<script src="weiyebancai/select2.min.js.下载" type="text/javascript"></script>
+
+<script src="weiyebancai/SelectSearch.js.下载" type="text/javascript"></script>
+<script src="weiyebancai/YJP-Template.js.下载" type="text/javascript"></script>
+<script src="weiyebancai/YJP-Service.js.下载" type="text/javascript"></script>
+<script src="weiyebancai/YJP-Directive.js.下载" type="text/javascript"></script>
+<script src="weiyebancai/angular-permission.js.下载" type="text/javascript"></script>
+<!-- 初始化路由配置 -->
+<!-- BEGIN PAGE LEVEL SCRIPTS -->
+
+<script src="weiyebancai/metronic.js.下载" type="text/javascript"></script>
+<script src="weiyebancai/layout.js.下载" type="text/javascript"></script>
+<script src="weiyebancai/sizzle.js.下载" type="text/javascript"></script>
+
+<script src="weiyebancai/select.js(1).下载" type="text/javascript"></script>
+<script src="weiyebancai/multiJiupiCityTree.js.下载" type="text/javascript"></script>
+<script src="weiyebancai/jiupiCityFullNameSelect.js.下载" type="text/javascript"></script>
+<script src="weiyebancai/bizUserLevelConversion.js.下载" type="text/javascript"></script>
+<script src="weiyebancai/productStatisticsCategory.js.下载" type="text/javascript"></script>
+<script src="weiyebancai/productDisplayCategory.js.下载" type="text/javascript"></script>
+<script src="weiyebancai/ejpJiupiCitySelect.js.下载" type="text/javascript"></script>
+
+<script src="weiyebancai/findDictionaryByCodeService.js.下载" type="text/javascript"></script>
+<script src="weiyebancai/jiupiCityTreeService.js.下载" type="text/javascript"></script>
+<script src="weiyebancai/zTreeService.js.下载" type="text/javascript"></script>
+<script src="weiyebancai/ejpTableCheckedService.js.下载" type="text/javascript"></script>
+<script src="weiyebancai/productCategoryService.js.下载" type="text/javascript"></script>
+<script src="weiyebancai/productDisplayCategoryService.js.下载" type="text/javascript"></script>
+<script src="weiyebancai/CommonService.js(1).下载" type="text/javascript"></script>
+
+
+</body>
+</html>
