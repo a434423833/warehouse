@@ -33,7 +33,7 @@ public class UserController {
      */
     @RequestMapping(value = "")
     public ModelAndView index() {
-        return new ModelAndView("redirect:login/index_副本.html");
+        return new ModelAndView("redirect:login/index.html");
     }
 
     /**
@@ -64,7 +64,8 @@ public class UserController {
      * @return
      */
     @RequestMapping(value = "/exit")
-    public void userExit(UserDTO userDTO, HttpSession session) {
+    public ModelAndView userExit(UserDTO userDTO, HttpSession session) {
         session.invalidate();
+        return new ModelAndView("redirect:login/index.html");
     }
 }

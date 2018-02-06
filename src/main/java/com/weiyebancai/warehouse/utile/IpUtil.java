@@ -1,5 +1,4 @@
-package com.yijiupi.kjjsp.utile;
-
+package com.weiyebancai.warehouse.utile;
 
 import org.apache.commons.lang3.text.StrTokenizer;
 
