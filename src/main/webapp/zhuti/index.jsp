@@ -1,3 +1,4 @@
+<%@ page language="java" pageEncoding="UTF-8" %>
 <!DOCTYPE HTML>
 <html>
 <head>
@@ -18,9 +19,9 @@
     </div>
 
     <div class="dl-log">欢迎您，
-        <span class="dl-log-user">曹昊,</span>
-        <span class="dl-log-user">管理员</span>
-        <a href="###" title="退出系统"
+        <span class="dl-log-user" id="head_name">${user.username}</span>
+        <span class="dl-log-user" id="head_state">${user.auth==1?"管理员":(user.auth==2?"仓管":"无")}</span>
+        <a href="../../exit" title="退出系统"
            class="dl-log-quit">[退出]</a>
     </div>
 </div>
@@ -56,6 +57,7 @@
 <script type="text/javascript" src="assets/js/config.js"></script>
 
 <script>
+    var auth = "${sessionScope.user.auth}";
     BUI.use('common/main', function () {
         var config = [{
             id: 'menu',
@@ -64,7 +66,7 @@
                 text: '库存管理',
                 items: [
                     {id: 'code', text: '库存查询', href: 'main/code.html', closeable: false},
-                    {id: 'main-menu', text: '手动校正库存', href: 'main/menu.html'},
+                    {id: 'main-menu', text: '手动添加库存', href: 'main/menu1.html'},
                 ]
             }]
         }, {
@@ -125,7 +127,14 @@
         new PageUtil.MainPage({
             modulesConfig: config
         });
-    });
+        $("li").each(function () {
+            var datavalue = $(this).attr("data-id");
+            if (auth != 1 && datavalue == "main-menu") {
+                $(this).css("display", "none");
+            }
+        });
+    })
+    ;
 </script>
 <div style="display:none">
     <script src='http://v7.cnzz.com/stat.php?id=155540&web_id=155540' language='JavaScript' charset='gb2312'></script>

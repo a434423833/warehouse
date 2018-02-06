@@ -15,6 +15,15 @@ public class UserPO implements Serializable {
     private String username;
     private String account;
     private String password;
+    private Integer auth;
+
+    public Integer getAuth() {
+        return auth;
+    }
+
+    public void setAuth(Integer auth) {
+        this.auth = auth;
+    }
 
     public String getUsername() {
         return username;

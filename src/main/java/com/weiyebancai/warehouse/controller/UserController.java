@@ -2,6 +2,7 @@ package com.weiyebancai.warehouse.controller;
 
 import com.weiyebancai.warehouse.pojo.Result;
 import com.weiyebancai.warehouse.pojo.UserDTO;
+import com.weiyebancai.warehouse.pojo.UserVO;
 import com.weiyebancai.warehouse.service.UserServer;
 import com.weiyebancai.warehouse.utile.ResultUtil;
 import org.slf4j.Logger;
@@ -47,11 +48,23 @@ public class UserController {
         Assert.notNull(userDTO, "DTO不能为null");
         Assert.notNull(userDTO.getAccount(), "账号不能为null");
         Assert.notNull(userDTO.getPassword(), "密码不能为null");
-        boolean bl = userServer.userLogin(userDTO);
-        if (bl) {
-            session.setAttribute("user", userDTO);
+        UserVO vo = userServer.userLogin(userDTO);
+        if (vo != null) {
+            session.setAttribute("user", vo);
             return ResultUtil.success();
         }
         return ResultUtil.error(100, "用户名密码错误", null);
+    }
+
+    /**
+     * 退出
+     *
+     * @param userDTO
+     * @param session
+     * @return
+     */
+    @RequestMapping(value = "/exit")
+    public void userExit(UserDTO userDTO, HttpSession session) {
+        session.invalidate();
     }
 }
