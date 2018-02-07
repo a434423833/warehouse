@@ -200,7 +200,7 @@
 
     function searchClick() {
         var productName = $("#productName").val();
-        var chirdCategory = $("#chirdleibie").val();
+        var productCategory = $("#chirdleibie").val();
         var productCount = $("#productCount").val();
         var productWarehouse = $("#productwarehouse").val();
         var productBrand = $("#productbrand").val();
@@ -209,7 +209,7 @@
             url: "../../insertProduct",           //地址
             data: {            //传递的参数
                 "productName": productName,
-                "chirdCategory": chirdCategory,
+                "productCategory": chirdCategory,
                 "productCount": productCount,
                 "productWarehouse": productWarehouse,
                 "productBrand": productBrand

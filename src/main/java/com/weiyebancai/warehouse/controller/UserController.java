@@ -1,5 +1,6 @@
 package com.weiyebancai.warehouse.controller;
 
+import com.weiyebancai.warehouse.pojo.ProductDTO;
 import com.weiyebancai.warehouse.pojo.Result;
 import com.weiyebancai.warehouse.pojo.UserDTO;
 import com.weiyebancai.warehouse.pojo.UserVO;
@@ -59,20 +60,18 @@ public class UserController {
     /**
      * 登陆
      *
-     * @param userDTO
+     * @param productDTO
      * @param session
      * @return
      */
     @RequestMapping(value = "/insertProduct")
-    public Result insertProduct(UserDTO userDTO, HttpSession session) {
-        Assert.notNull(userDTO, "DTO不能为null");
-        Assert.notNull(userDTO.getAccount(), "账号不能为null");
-        Assert.notNull(userDTO.getPassword(), "密码不能为null");
-        UserVO vo = userServer.userLogin(userDTO);
-        if (vo != null) {
-            session.setAttribute("user", vo);
-            return ResultUtil.success();
-        }
+    public Result insertProduct(ProductDTO productDTO, HttpSession session) {
+        Assert.notNull(productDTO, "DTO不能为null");
+        Assert.notNull(productDTO.getProductName(), "名称不能为null");
+        Assert.notNull(productDTO.getProductCategory(), "类别不能为null");
+        Assert.notNull(productDTO.getProductCount(), "数量不能为null");
+        Assert.notNull(productDTO.getProductWarhouse(), "所在地不能为null");
+
         return ResultUtil.error(100, "用户名密码错误", null);
     }
 
