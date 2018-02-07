@@ -10,7 +10,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -58,21 +60,22 @@ public class UserController {
     }
 
     /**
-     * 登陆
+     * 添加商品
      *
      * @param productDTO
      * @param session
      * @return
      */
-    @RequestMapping(value = "/insertProduct")
-    public Result insertProduct(ProductDTO productDTO, HttpSession session) {
+    @RequestMapping(value = "/insertProduct", method = RequestMethod.POST)
+    public Result insertProduct(@RequestBody ProductDTO productDTO, HttpSession session) {
         Assert.notNull(productDTO, "DTO不能为null");
         Assert.notNull(productDTO.getProductName(), "名称不能为null");
         Assert.notNull(productDTO.getProductCategory(), "类别不能为null");
         Assert.notNull(productDTO.getProductCount(), "数量不能为null");
-        Assert.notNull(productDTO.getProductWarhouse(), "所在地不能为null");
-
-        return ResultUtil.error(100, "用户名密码错误", null);
+        Assert.notNull(productDTO.getProductWarehouse(), "所在地不能为null");
+        Assert.notNull(productDTO.getProductBid(), "进价不能为null");
+        userServer.insertProduct(productDTO);
+        return ResultUtil.success();
     }
 
     /**

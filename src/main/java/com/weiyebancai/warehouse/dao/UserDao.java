@@ -1,5 +1,6 @@
 package com.weiyebancai.warehouse.dao;
 
+import com.weiyebancai.warehouse.pojo.ProductPO;
 import com.weiyebancai.warehouse.pojo.UserPO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -27,4 +28,12 @@ public class UserDao {
         return user;
     }
 
+    /**
+     * 添加商品
+     *
+     * @param productPO
+     */
+    public void insertProduct(ProductPO productPO) {
+        mongoTemplate.save(productPO);
+    }
 }

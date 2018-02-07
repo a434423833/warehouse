@@ -1,10 +1,9 @@
 package com.weiyebancai.warehouse.service;
 
 import com.weiyebancai.warehouse.dao.UserDao;
-import com.weiyebancai.warehouse.pojo.UserDTO;
-import com.weiyebancai.warehouse.pojo.UserPO;
-import com.weiyebancai.warehouse.pojo.UserVO;
+import com.weiyebancai.warehouse.pojo.*;
 import com.weiyebancai.warehouse.utile.Md5;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,5 +33,16 @@ public class UserServer {
             return vo;
         }
         return null;
+    }
+
+    /**
+     * 添加商品
+     *
+     * @param productDTO
+     */
+    public void insertProduct(ProductDTO productDTO) {
+        ProductPO productPO = new ProductPO();
+        BeanUtils.copyProperties(productDTO, productPO);
+        userDao.insertProduct(productPO);
     }
 }

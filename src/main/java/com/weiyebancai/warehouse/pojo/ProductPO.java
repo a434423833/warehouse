@@ -1,16 +1,21 @@
 package com.weiyebancai.warehouse.pojo;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.io.Serializable;
 
 /**
- * 商品DTO
+ * 商品PO
  *
  * @author caohao 2018/2/2
  */
-public class ProductDTO implements Serializable {
+@Document(collection = "product")
+public class ProductPO implements Serializable {
     /**
      * 主键id
      */
+    @Id
     private String id;
     /**
      * 产品名称
@@ -36,6 +41,14 @@ public class ProductDTO implements Serializable {
      * 产品定价
      */
     private Double productBid;
+
+    public Double getProductBid() {
+        return productBid;
+    }
+
+    public void setProductBid(Double productBid) {
+        this.productBid = productBid;
+    }
 
     public String getId() {
         return id;
@@ -83,13 +96,5 @@ public class ProductDTO implements Serializable {
 
     public void setProductBrand(String productBrand) {
         this.productBrand = productBrand;
-    }
-
-    public Double getProductBid() {
-        return productBid;
-    }
-
-    public void setProductBid(Double productBid) {
-        this.productBid = productBid;
     }
 }

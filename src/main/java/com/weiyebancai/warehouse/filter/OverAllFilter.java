@@ -27,12 +27,11 @@ public class OverAllFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response,
                          FilterChain chain) throws IOException, ServletException {
         String ip = IpUtil.getIpFromRequest((HttpServletRequest) request);
-        LOGGER.error(ip + "进入到全局过滤器");
-        String url = ((HttpServletRequest) request).getRequestURI();
         HttpSession session = ((HttpServletRequest) request).getSession();
         String currentURL = ((HttpServletRequest) request).getRequestURI();
         Object object = session.getAttribute("user");
         if (object == null && !currentURL.endsWith("/login/index.html") && !currentURL.endsWith("userLogin")) {
+            LOGGER.error(ip + "进入到全局过滤器");
             ((HttpServletResponse) response).sendRedirect("/login/index.html");
             return;
         }
