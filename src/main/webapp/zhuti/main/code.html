@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<!-- saved from url=(0067)http://scop.test.yijiupidev.com/templates/index.html#/inventoryList -->
+<html lang="zh-cn"><!--<![endif]--><!-- BEGIN HEAD -->
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>伟业查询后台</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+
+    <!-- BEGIN GLOBAL MANDATORY STYLES -->
+    <link href="weiyebancai/font-opensans.css" rel="stylesheet" type="text/css">
+    <link href="weiyebancai/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="weiyebancai/simple-line-icons.min.css" rel="stylesheet" type="text/css">
+    <link href="weiyebancai/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="weiyebancai/bootstrap.fileinput.min.css" rel="stylesheet" type="text/css">
+    <link href="weiyebancai/uniform.default.css" rel="stylesheet" type="text/css">
+    <link href="weiyebancai/bootstrap-switch.min.css" rel="stylesheet" type="text/css">
+
+    <link href="weiyebancai/angular-block-ui.min.css" rel="stylesheet" type="text/css">
+    <link href="weiyebancai/angular-toastr.css" rel="stylesheet" type="text/css">
+    <link href="weiyebancai/select.min.css" rel="stylesheet" type="text/css">
+    <link href="weiyebancai/select.css" rel="stylesheet" type="text/css">
+    <link href="weiyebancai/selectize.default.css" rel="stylesheet" type="text/css">
+    <link href="weiyebancai/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css">
+    <link href="weiyebancai/bootstrap-datepicker3.min.css" rel="stylesheet" type="text/css">
+    <link href="weiyebancai/select2.css" rel="stylesheet" type="text/css">
+    <link href="weiyebancai/select2-bootstrap.css" rel="stylesheet" type="text/css">
+    <link href="weiyebancai/components-rounded.css" id="style_components" rel="stylesheet" type="text/css">
+    <link href="weiyebancai/plugins.css" rel="stylesheet" type="text/css">
+    <link href="weiyebancai/weui.css" rel="stylesheet" type="text/css">
+    <link href="weiyebancai/custom.css" rel="stylesheet" type="text/css">
+    <link href="weiyebancai/layout.css" rel="stylesheet" type="text/css">
+    <link href="weiyebancai/darkblue.css" rel="stylesheet" type="text/css" id="style_color">
+    <link href="weiyebancai/custom(1).css" rel="stylesheet" type="text/css">
+    <link href="weiyebancai/SelectSearch.css" rel="stylesheet" type="text/css">
+    <link href="weiyebancai/add-picture.css" rel="stylesheet" type="text/css">
+    <script src="../../js/jquery-2.1.0.js"></script>
+</head>
+<!-- END HEAD -->
+<!-- BEGIN BODY -->
+<body data-ng-controller="AppController"
+      class="page-header-fixed page-style-square ng-scope block-ui block-ui-anim-fade"
+      data-ng-class="{&#39;page-sidebar-closed&#39;: settings.layout.pageSidebarClosed}" block-ui="main"
+      aria-busy="false" onload="bodyonload(this)">
+
+<div class="page-content-wrapper">
+    <div class="page-content" id="dataLoading" style="min-height:813px">
+        <div data-ui-view="" class="fade-in-up ng-scope">
+            <div data-page-top="">
+                <h3 class="page-title ng-binding" data-ng-bind="$state.current.data.pageTitle">仓库库存</h3>
+            </div>
+            <div class="row" data-page-content="">
+                <div class="col-md-12">
+                    <div class="portlet light bordered">
+                        <div class=" portlet-title">
+                            <div class=" caption " data-ng-hide="$state.current.data.captionHelper">
+                                <span class=" caption-subject font-green-sharp bold uppercase"> 搜索 </span>&nbsp;
+                                <span class=" caption-helper"> 输入搜索信息 </span>
+                            </div>
+                            <!-- ngIf: $state.current.data.captionHelper -->
+                        </div>
+                        <div class="portlet-body" data-ng-transclude="">
+                            <form onkeydown="if(event.keyCode==13){return false;}"
+                                  class="form-horizontal data-ng-pristine data-ng-valid searchbox ng-pristine ng-valid"
+                                  data-page-search="">
+                                <div class="form-body" data-ng-transclude="">
+                                    <div class="row ng-scope">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label">产品名称：</label>
+                                                <div class="col-md-9">
+                                                    <input type="text" name="product_name"
+                                                           class="form-control "
+                                                           placehold="产品名称" id="productName">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label">品牌：</label>
+                                                <div class="col-md-9">
+                                                    <input type="text" name="brand"
+                                                           class="form-control ng-pristine ng-untouched ng-valid"
+                                                           ng-model="vo.productBrand">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row ng-scope">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label">产品类别：</label>
+                                                <div class="col-md-9">
+                                                    <product-display-category display-category-vo="vo"
+                                                                              display-partner-category-id="vo.firstCategoryId"
+                                                                              display-subcategory-id="vo.secondCategoryId"
+                                                                              class="ng-isolate-scope">
+                                                        <div class="row">
+                                                            <div class="col-md-3">
+                                                                <select class="form-control"
+                                                                        onchange="leimuchange(this)" id="fatherleibie">
+                                                                    <option>
+                                                                        请选择
+                                                                    </option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-md-3">
+                                                                <select class="form-control" id="chirdleibie">
+                                                                    <option>
+                                                                        请选择
+                                                                    </option>
+                                                                </select></div>
+                                                        </div>
+                                                    </product-display-category>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label">所在仓库:</label>
+                                                <div class="col-md-9">
+                                                    <ejp-jiupi-city-select jiupi-city-vo="cityVo"
+                                                                           hide-please-select="false"
+                                                                           change-jiupi-province=""
+                                                                           change-jiupi-city="" is-disabled="false"
+                                                                           class="ng-isolate-scope">
+                                                        <div class="row">
+                                                            <!-- 酒批城市选择控件 -->
+                                                            <div class="col-md-6"><select
+                                                                    class="form-control ng-pristine ng-valid ng-touched"
+                                                                    ng-change="jiupiCityVo.cityId=null;changeJiupiProvince(jiupiCityVo);"
+                                                                    ng-model="jiupiCityVo.provinceObj"
+                                                                    ng-disabled="isDisabled"
+                                                                    ng-options="provinceItem as provinceItem.province for provinceItem in allJiupiCityList track by provinceItem.province">
+                                                                <option value="" ng-hide="hidePleaseSelect" class="">
+                                                                    请选择
+                                                                </option>
+                                                                <option value="店内" label="店内">店内</option>
+                                                                <option value="仓库" label="仓库">仓库</option>
+                                                            </select></div>
+                                                            <div class="col-md-6">
+                                                            </div>
+                                                        </div>
+                                                    </ejp-jiupi-city-select>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                                <div class="form-actions">
+                                    <div class="row">
+                                        <div class="col-md-7 col-md-offset-5">
+                                            <button type="button" class="btn btn-primary"
+                                                    data-ng-click="searchClick()"> 查询
+                                            </button>
+                                            <button type="button" class="btn btn-default"
+                                                    data-ng-click="resetClick()">清空
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+
+                            <div class="table-container ng-scope" ng-init="findList()">
+                                <table class="table table-bordered table-hover table-striped " id="datatable_ajax">
+                                    <thead>
+                                    <tr class="heading">
+                                        <th>序号</th>
+                                        <th>品牌</th>
+                                        <th>种类</th>
+                                        <th>产品名称</th>
+                                        <th>所剩库存</th>
+                                        <th>所在仓库</th>
+                                        <th>负责人</th>
+                                        <th>操作</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr data-ng-repeat="item in vm.items" class="odd gradeX ng-scope">
+                                        <td data-ng-bind="item.item.seq" rowspan="1" ng-hide="!item.item.rowspan"
+                                            class="ng-binding">1
+                                        </td>
+                                        <td data-ng-bind="item.item.productBrand" rowspan="1"
+                                            ng-hide="!item.item.rowspan" class="ng-binding">伟业
+                                        </td>
+                                        <td data-ng-bind="item.item.productName" rowspan="1"
+                                            ng-hide="!item.item.rowspan" class="ng-binding">油漆
+                                        </td>
+                                        <td data-ng-bind="item.item.specName" rowspan="1" ng-hide="!item.item.rowspan"
+                                            class="ng-binding">XXX油漆
+                                        </td>
+                                        <td data-ng-bind="item.item.cityName" rowspan="1" ng-hide="!item.item.rowspan"
+                                            class="ng-binding">12
+                                        </td>
+                                        <td data-ng-bind="item.warehouseName" class="ng-binding">仓库</td>
+                                        <td data-ng-bind="item.ownerName" class="ng-binding">仓管</td>
+                                        <td>
+                                            <a> 库存变更明细</a>
+                                            <a> 变更库存</a>
+                                            <a>库存转移</a>
+                                        </td>
+
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <ul class="pagination-sm pull-right pagination ng-isolate-scope ng-valid"
+                                boundary-links="true" items-per-page="vm.pages.itemsPerPage"
+                                total-items="vm.pages.recordCount" ng-model="vm.pages.index" previous-text="‹"
+                                next-text="›" first-text="«" last-text="»" ng-change="query()">
+                                <!-- ngIf: boundaryLinks -->
+                                <li ng-if="boundaryLinks" ng-class="{disabled: noPrevious()}"
+                                    class="ng-scope disabled"><a
+                                        href="http://scop.test.yijiupidev.com/templates/index.html"
+                                        ng-click="selectPage(1)" class="ng-binding">«</a></li>
+                                <!-- end ngIf: boundaryLinks -->
+                                <!-- ngIf: directionLinks -->
+                                <li ng-if="directionLinks" ng-class="{disabled: noPrevious()}"
+                                    class="ng-scope disabled"><a
+                                        href="http://scop.test.yijiupidev.com/templates/index.html"
+                                        ng-click="selectPage(page - 1)" class="ng-binding">‹</a></li>
+                                <!-- end ngIf: directionLinks -->
+                                <!-- ngRepeat: page in pages track by $index -->
+                                <li ng-repeat="page in pages track by $index" ng-class="{active: page.active}"
+                                    class="ng-scope active"><a
+                                        href="http://scop.test.yijiupidev.com/templates/index.html"
+                                        ng-click="selectPage(page.number)" class="ng-binding">1</a></li>
+                                <!-- end ngRepeat: page in pages track by $index -->
+                                <!-- ngIf: directionLinks -->
+                                <li ng-if="directionLinks" ng-class="{disabled: noNext()}"
+                                    class="ng-scope disabled"><a
+                                        href="http://scop.test.yijiupidev.com/templates/index.html"
+                                        ng-click="selectPage(page + 1)" class="ng-binding">›</a></li>
+                                <!-- end ngIf: directionLinks -->
+                                <!-- ngIf: boundaryLinks -->
+                                <li ng-if="boundaryLinks" ng-class="{disabled: noNext()}" class="ng-scope disabled">
+                                    <a href="http://scop.test.yijiupidev.com/templates/index.html"
+                                       ng-click="selectPage(totalPages)" class="ng-binding">»</a></li>
+                                <!-- end ngIf: boundaryLinks -->
+                            </ul>
+                            <h5 class="ng-binding ng-scope">每页 20条 | 共 条记录
+                                | 当前第 1 页 | 共 0 页</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+    var data = ['请选择', '板材', '门类', '五金', '其他'];
+    var data1 = [
+        ['请选择'],
+        ['伟业生态板', '普通生态板', '伟业板', '面漆板', '多层板', '石膏板', '面板', '杨木板', '铝扣板'],
+        ['衣柜移门', '瓶格门', '房门'],
+        ['轻钢龙骨', '扣条', '木方', '枪钉', '合页', '拉手', '免钉胶', '小五金'],
+        ['其他', '其他']
+    ];
+    function bodyonload() {
+        var str = "";
+        for (var i = 0; i < data.length; i++) {
+            str += "<option>" + data[i] + "</option> ";
+        }
+        $("#fatherleibie").html(str);
+    }
+    function leimuchange(obj) {
+        var index = obj.selectedIndex;
+        var str = "";
+        for (var i = 0; i < data1[index].length; i++) {
+            str += " <option value='" + data1[index][i] + "' label='" + data1[index][i] + "'>" + data1[index][i] + " </option>";
+        }
+        $("#chirdleibie").html(str);
+    }
+</script>
+</body>
+</html>
