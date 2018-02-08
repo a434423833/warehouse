@@ -7,11 +7,13 @@
     <link href="assets/css/dpl-min.css" rel="stylesheet" type="text/css"/>
     <link href="assets/css/bui-min.css" rel="stylesheet" type="text/css"/>
     <link href="assets/css/main-min.css" rel="stylesheet" type="text/css"/>
+    <script src='../js/bootstrap.min.css'></script>
+    <script src='../js/jquery-2.1.0.js'></script>
+    <script src='../js/bootstrap.min.js'></script>
 </head>
 <body>
 
 <div class="header">
-
     <div class="dl-title">
         <a href="http://sc.chinaz.com" title="文档库地址" target="_blank"><!-- 仅仅为了提供文档的快速入口，项目中请删除链接 -->
             <span class="lp-title-port">伟业板材</span><span class="dl-title-text">后台系统</span>
@@ -65,8 +67,8 @@
             menu: [{
                 text: '库存管理',
                 items: [
-                    {id: 'code', text: '库存查询', href: 'main/code.html', closeable: false},
-                    {id: 'main-menu', text: '手动添加库存', href: 'main/menu1.html'},
+                    {id: 'code', text: '库存查询', href: 'main/selectproduct.html', closeable: false},
+                    {id: 'main-menu', text: '手动添加库存', href: 'main/addproduct.html'},
                 ]
             }]
         }, {
@@ -74,7 +76,7 @@
             menu: [{
                 text: '出库单',
                 items: [
-                    {id: 'code', text: '查看出库单', href: 'form/code.html'},
+                    {id: 'code', text: '查看出库单', href: 'form/selectproduct.html'},
                     {id: 'example', text: '添加出库单', href: 'form/example.html'},
                     {id: 'introduce', text: '删除出库单', href: 'form/introduce.html'},
                 ]
@@ -96,7 +98,7 @@
             menu: [{
                 text: '利润管理',
                 items: [
-                    {id: 'code', text: '今日利润', href: 'search/code.html'},
+                    {id: 'code', text: '今日利润', href: 'search/selectproduct.html'},
                     {id: 'example', text: '利润统计', href: 'search/example.html'}
                 ]
             }]
@@ -105,7 +107,7 @@
              menu: [{
              text: '详情页面',
              items: [
-             {id: 'code', text: '详情页面代码', href: 'detail/code.html'},
+             {id: 'code', text: '详情页面代码', href: 'detail/selectproduct.html'},
              {id: 'example', text: '详情页面示例', href: 'detail/example.html'},
              {id: 'introduce', text: '详情页面简介', href: 'detail/introduce.html'}
              ]
@@ -115,7 +117,7 @@
             menu: [{
                 text: '账号管理',
                 items: [
-                    {id: 'code', text: '查看所有账号', href: 'chart/code.html'},
+                    {id: 'code', text: '查看所有账号', href: 'chart/selectproduct.html'},
                     {id: 'line', text: '添加仓管账号', href: 'chart/line.html'},
                     /* {id: 'area', text: '区域图', href: 'chart/area.html'},
                      {id: 'column', text: '柱状图', href: 'chart/column.html'},

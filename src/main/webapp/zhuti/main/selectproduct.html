@@ -35,12 +35,12 @@
     <link href="weiyebancai/SelectSearch.css" rel="stylesheet" type="text/css">
     <link href="weiyebancai/add-picture.css" rel="stylesheet" type="text/css">
     <script src="../../js/jquery-2.1.0.js"></script>
+    <script src="../../js/bootstrap.min.js"></script>
+    <script src="../../js/bootstrap.min.css "></script>
 </head>
 <!-- END HEAD -->
 <!-- BEGIN BODY -->
-<body data-ng-controller="AppController"
-      class="page-header-fixed page-style-square ng-scope block-ui block-ui-anim-fade"
-      data-ng-class="{&#39;page-sidebar-closed&#39;: settings.layout.pageSidebarClosed}" block-ui="main"
+<body class="page-header-fixed page-style-square ng-scope block-ui block-ui-anim-fade"
       aria-busy="false" onload="bodyonload(this)">
 
 <div class="page-content-wrapper">
@@ -79,9 +79,8 @@
                                             <div class="form-group">
                                                 <label class="col-md-3 control-label">品牌：</label>
                                                 <div class="col-md-9">
-                                                    <input type="text" name="brand"
-                                                           class="form-control ng-pristine ng-untouched ng-valid"
-                                                           ng-model="vo.productBrand">
+                                                    <input type="text" name="productbrand"
+                                                           class="form-control " id="productbrand">
                                                 </div>
                                             </div>
                                         </div>
@@ -126,13 +125,8 @@
                                                                            change-jiupi-city="" is-disabled="false"
                                                                            class="ng-isolate-scope">
                                                         <div class="row">
-                                                            <!-- 酒批城市选择控件 -->
                                                             <div class="col-md-6"><select
-                                                                    class="form-control ng-pristine ng-valid ng-touched"
-                                                                    ng-change="jiupiCityVo.cityId=null;changeJiupiProvince(jiupiCityVo);"
-                                                                    ng-model="jiupiCityVo.provinceObj"
-                                                                    ng-disabled="isDisabled"
-                                                                    ng-options="provinceItem as provinceItem.province for provinceItem in allJiupiCityList track by provinceItem.province">
+                                                                    class="form-control" id="productwarehouse">
                                                                 <option value="" ng-hide="hidePleaseSelect" class="">
                                                                     请选择
                                                                 </option>
@@ -155,10 +149,10 @@
                                     <div class="row">
                                         <div class="col-md-7 col-md-offset-5">
                                             <button type="button" class="btn btn-primary"
-                                                    data-ng-click="searchClick()"> 查询
+                                                    onclick="searchClick()"> 查询
                                             </button>
                                             <button type="button" class="btn btn-default"
-                                                    data-ng-click="resetClick()">清空
+                                                    onclick="resetClick()">清空
                                             </button>
                                         </div>
                                     </div>
@@ -170,80 +164,24 @@
                                     <thead>
                                     <tr class="heading">
                                         <th>序号</th>
-                                        <th>品牌</th>
-                                        <th>种类</th>
+                                        <th>类别</th>
                                         <th>产品名称</th>
+                                        <th>品牌</th>
                                         <th>所剩库存</th>
                                         <th>所在仓库</th>
-                                        <th>负责人</th>
+                                        <!-- <th>负责人</th>-->
                                         <th>操作</th>
                                     </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody id="selectBody">
                                     <tr data-ng-repeat="item in vm.items" class="odd gradeX ng-scope">
-                                        <td data-ng-bind="item.item.seq" rowspan="1" ng-hide="!item.item.rowspan"
-                                            class="ng-binding">1
-                                        </td>
-                                        <td data-ng-bind="item.item.productBrand" rowspan="1"
-                                            ng-hide="!item.item.rowspan" class="ng-binding">伟业
-                                        </td>
-                                        <td data-ng-bind="item.item.productName" rowspan="1"
-                                            ng-hide="!item.item.rowspan" class="ng-binding">油漆
-                                        </td>
-                                        <td data-ng-bind="item.item.specName" rowspan="1" ng-hide="!item.item.rowspan"
-                                            class="ng-binding">XXX油漆
-                                        </td>
-                                        <td data-ng-bind="item.item.cityName" rowspan="1" ng-hide="!item.item.rowspan"
-                                            class="ng-binding">12
-                                        </td>
-                                        <td data-ng-bind="item.warehouseName" class="ng-binding">仓库</td>
-                                        <td data-ng-bind="item.ownerName" class="ng-binding">仓管</td>
-                                        <td>
-                                            <a> 库存变更明细</a>
-                                            <a> 变更库存</a>
-                                            <a>库存转移</a>
-                                        </td>
+
 
                                     </tr>
                                     </tbody>
                                 </table>
                             </div>
-                            <ul class="pagination-sm pull-right pagination ng-isolate-scope ng-valid"
-                                boundary-links="true" items-per-page="vm.pages.itemsPerPage"
-                                total-items="vm.pages.recordCount" ng-model="vm.pages.index" previous-text="‹"
-                                next-text="›" first-text="«" last-text="»" ng-change="query()">
-                                <!-- ngIf: boundaryLinks -->
-                                <li ng-if="boundaryLinks" ng-class="{disabled: noPrevious()}"
-                                    class="ng-scope disabled"><a
-                                        href="http://scop.test.yijiupidev.com/templates/index.html"
-                                        ng-click="selectPage(1)" class="ng-binding">«</a></li>
-                                <!-- end ngIf: boundaryLinks -->
-                                <!-- ngIf: directionLinks -->
-                                <li ng-if="directionLinks" ng-class="{disabled: noPrevious()}"
-                                    class="ng-scope disabled"><a
-                                        href="http://scop.test.yijiupidev.com/templates/index.html"
-                                        ng-click="selectPage(page - 1)" class="ng-binding">‹</a></li>
-                                <!-- end ngIf: directionLinks -->
-                                <!-- ngRepeat: page in pages track by $index -->
-                                <li ng-repeat="page in pages track by $index" ng-class="{active: page.active}"
-                                    class="ng-scope active"><a
-                                        href="http://scop.test.yijiupidev.com/templates/index.html"
-                                        ng-click="selectPage(page.number)" class="ng-binding">1</a></li>
-                                <!-- end ngRepeat: page in pages track by $index -->
-                                <!-- ngIf: directionLinks -->
-                                <li ng-if="directionLinks" ng-class="{disabled: noNext()}"
-                                    class="ng-scope disabled"><a
-                                        href="http://scop.test.yijiupidev.com/templates/index.html"
-                                        ng-click="selectPage(page + 1)" class="ng-binding">›</a></li>
-                                <!-- end ngIf: directionLinks -->
-                                <!-- ngIf: boundaryLinks -->
-                                <li ng-if="boundaryLinks" ng-class="{disabled: noNext()}" class="ng-scope disabled">
-                                    <a href="http://scop.test.yijiupidev.com/templates/index.html"
-                                       ng-click="selectPage(totalPages)" class="ng-binding">»</a></li>
-                                <!-- end ngIf: boundaryLinks -->
-                            </ul>
-                            <h5 class="ng-binding ng-scope">每页 20条 | 共 条记录
-                                | 当前第 1 页 | 共 0 页</h5>
+                            <h5 class="ng-binding ng-scope" id="fanye"></h5>
                         </div>
                     </div>
                 </div>
@@ -277,6 +215,188 @@
         }
         $("#chirdleibie").html(str);
     }
+    function searchClick(pageNum, pages) {
+        var productName = $("#productName").val();
+        var productBrand = $("#productbrand").val();
+        var productCategory = $("#chirdleibie").val();
+        var productWarehouse = $("#productwarehouse").val();
+        if (productName == "") {
+            productName = null;
+        }
+        if (productBrand == "") {
+            productBrand = null;
+        }
+        if (productCategory == "请选择" || productCategory == "") {
+            productCategory = null;
+        }
+        if (productWarehouse == "请选择" || productWarehouse == "") {
+            productWarehouse = null;
+        }
+        if (pageNum <= 0 || pageNum > pages) {
+            return;
+        }
+        $.ajax({
+            type: "POST",      //传输方式
+            url: "../..//selectProduct", //地址
+            dataType: 'json',
+            contentType: 'application/json',
+            data: JSON.stringify({            //传递的参数
+                "productName": productName,
+                "productCategory": productCategory,
+                "productWarehouse": productWarehouse,
+                "productBrand": productBrand,
+                "page": {
+                    "pageNum": pageNum,
+                    "pageSize": 20,
+                    "orderBy": "asc"
+                }
+            }),
+            success: function (obj) {
+                if (obj.success == true) {
+                    var str = ""
+                    for (var i = 0; i < obj.data.length; i++) {
+                        str += "<tr  class='odd gradeX ng-scope'>" +
+                            "<td class='ng-binding'>" + (i + 1) + "</td>" +
+                            "<td  class='ng-binding'>" + obj.data[i].productCategory + "</td>" +
+                            "<td  class='ng-binding'>" + obj.data[i].productName + "</td>" +
+                            "<td class='ng-binding'>" + obj.data[i].productBrand + " </td>" +
+                            "<td class='ng-binding'>" + obj.data[i].productCount + "</td>" +
+                            "<td  class='ng-binding'>" + obj.data[i].productWarehouse + "</td>" +
+                            "<td class='ng-binding'> <a class='btn btn-info btn-xs' href='../main/selectrocord.html?id=\'" + obj.data[i].id + "\'> 库存变更明细</a >&nbsp;&nbsp;&nbsp; " +
+                            "<button  class='btn btn-primary btn-xs' onclick='getId(&apos;" + obj.data[i].id + "&apos;)'>变更库存</a></td></tr>";
+                    }
+                    $("#selectBody").html(str);
+                    if (str == "") {
+                        $("#selectBody").html("没有查找到商品");
+                    }
+                    $("#fanye").html("每页 " + obj.page.pageSize + "条 | 共 " + obj.page.total + "条记录 | 当前第 " + obj.page.pageNum + " 页 | 共 " + obj.page.pages + " 页" +
+                        "| <a onclick='searchClick(" + (obj.page.pageNum - 1) + "," + obj.page.pages + ")'> 上一页 </a>" +
+                        "| <a onclick='searchClick(" + (obj.page.pageNum + 1) + "," + obj.page.pages + ")'> 下一页 </a>" +
+                        "| <a onclick='searchClick(1,1)'> 首页 </a>" +
+                        "| <a onclick='searchClick(" + obj.page.pages + "," + obj.page.pages + ")'>尾页 </a>");
+                }
+            },
+            error: function (data, type, err) {
+                $("#modelMsg").html(+data.responseJSON.status + ":" + data.responseJSON.message);
+                $('#myModal').modal();
+            }
+        });
+
+    }
+    function resetClick() {
+        $("#productName").val("");
+        var str = "";
+        for (var i = 0; i < data.length; i++) {
+            str += "<option>" + data[i] + "</option>"
+        }
+        $("#fatherleibie").html(str);
+        $("#chirdleibie").html("<option value='请选择' label='请选择'>请选择</option>");
+        $("#productwarehouse").html("<option>请选择</option><option>店内</option><option>仓库</option>");
+        $("#productbrand").val("");
+
+    }
+    function getId(id) {
+        $('#modelHid').val(id);
+        $('#myModal1').modal();
+    }
+    function onchangeProduct() {
+        var id = $('#modelHid').val();
+        var recordCount = $('#recordCount').val();
+        var remork = $('#remork').val();
+        if (recordCount == null || recordCount == undefined || recordCount == "") {
+            $("#recordTishi").html("请填写变更数量");
+            return;
+        }
+        $("#recordTishi").html("");
+        if (!/^(0|[1-9][0-9]*|-[1-9][0-9]*)$/.test(recordCount)) {
+            $("#recordTishi").html("请变更数量需要为整数");
+            return;
+        }
+        $("#recordTishi").html("");
+        if (remork == null | remork == undefined || remork == "") {
+            $("#recordTishi").html("请填写原因");
+            return;
+        }
+        $("#recordTishi").html("");
+        $.ajax({
+            type: "POST",      //传输方式
+            url: "../../insertRecord", //地址
+            dataType: 'json',
+            contentType: 'application/json',
+            data: {            //传递的参数
+                "productId": id,
+                "recordCount": recordCount,
+                "remark": remork
+            },
+            success: function (obj) {
+
+            },
+            error: function (data, type, err) {
+                $("#modelMsg").html(+data.responseJSON.status + ":" + data.responseJSON.message);
+                $('#myModal').modal();
+            }
+        });
+    }
 </script>
+
+//变更库存模态框
+<div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel1">库存变更</h4>
+            </div>
+            <div class="modal-body" id="modelMsg1">
+                <div class="form-group" style="height: 80px">
+                    <input type="hidden" value="" id="modelHid">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-9">
+                        <table>
+                            <tr style="height: 35px">
+                                <td>变更数量：</td>
+                                <td><input type="number" class="form-control" id="recordCount" style="height: 25px">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>变更原因：</td>
+                                <td><input type="type" class="form-control" id="remork" style="height: 25px">
+                                </td>
+                            </tr>
+                        </table>
+                        <div style="color: red;margin-top: 5px">*正数增加，负数减少,所有操作都会被记录*</div>
+                        <div style="color: red;margin-top: 5px" id="recordTishi"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" onclick="onchangeProduct()">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+//错误提示模态
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">错误提示!</h4>
+            </div>
+            <div class="modal-body" id="modelMsg" style="color: red">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

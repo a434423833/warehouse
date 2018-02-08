@@ -35,13 +35,11 @@
     <link href="weiyebancai/SelectSearch.css" rel="stylesheet" type="text/css">
     <link href="weiyebancai/add-picture.css" rel="stylesheet" type="text/css">
     <script src="../../js/jquery-2.1.0.js"></script>
+    <script src="../../js/bootstrap.min.css"></script>
+    <script src="../../js/bootstrap.min.js"></script>
 </head>
-<!-- END HEAD -->
-<!-- BEGIN BODY -->
-<body data-ng-controller="AppController"
-      class="page-header-fixed page-style-square ng-scope block-ui block-ui-anim-fade"
-      data-ng-class="{&#39;page-sidebar-closed&#39;: settings.layout.pageSidebarClosed}" block-ui="main"
-      aria-busy="false" onload="bodyonload()">
+<body class="page-header-fixed page-style-square ng-scope block-ui block-ui-anim-fade"
+        aria-busy="false" onload="bodyonload()">
 
 <div class="page-content-wrapper">
     <div class="page-content" id="dataLoading" style="min-height:813px">
@@ -180,6 +178,26 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">错误提示!</h4>
+            </div>
+            <div class="modal-body" id="modelMsg" style="color: red">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 
 
@@ -228,7 +246,11 @@
         }
         $("#tishi2").html("");
         if (productCount == null || productCount == "") {
-            $("#tishi3").html("请填写产品库存数");
+            $("#tishi3").html("请填写产品数量");
+            return;
+        }
+        if (!/^[1-9]*[1-9][0-9]*$/.test(productCount)) {
+            $("#tishi3").html("产品数量只能为正整数");
             return;
         }
         $("#tishi3").html("");
@@ -247,7 +269,7 @@
         $("#tishi5").html("");
         $.ajax({
             type: "POST",      //传输方式
-            url: "http://localhost/insertProduct", //地址
+            url: "../../insertProduct", //地址
             dataType: 'json',
             contentType: 'application/json',
             data: JSON.stringify({            //传递的参数
@@ -261,9 +283,11 @@
             success: function (obj) {
                 if (obj.code == 0) {
                     resetClick();
-                } else {
-                    alert("添加失败!!!请重新添加");
                 }
+            },
+            error: function (data, type, err) {
+                $("#modelMsg").html(+data.responseJSON.status + ":" + data.responseJSON.message);
+                $('#myModal').modal();
             }
         });
     }
@@ -278,7 +302,7 @@
         $("#chirdleibie").html("<option value='请选择' label='请选择'>请选择</option>");
         $("#productName").val("");
         $("#productCount").val("");
-        $("#productwarehouse").val("<option>请选择</option>店内<option></option><option>仓库</option>");
+        $("#productwarehouse").html("<option>请选择</option><option>店内</option><option>仓库</option>");
         $("#productbrand").val("");
         $("#productBid").val("");
     }

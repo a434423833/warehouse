@@ -12,7 +12,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
- * 主要过滤没有登录返回主页以及信息没有完善
+ * 主要过滤没有登录请求的
  */
 @WebFilter(filterName = "overAllFilter", urlPatterns = {"/zhuti/*"})
 public class OverAllFilter implements Filter {
@@ -31,8 +31,8 @@ public class OverAllFilter implements Filter {
         String currentURL = ((HttpServletRequest) request).getRequestURI();
         Object object = session.getAttribute("user");
         if (object == null && !currentURL.endsWith("/login/index.html") && !currentURL.endsWith("userLogin")) {
-            LOGGER.error(ip + "进入到全局过滤器");
-            ((HttpServletResponse) response).sendRedirect("/login/index.html");
+            LOGGER.info(ip + "进入到全局过滤器,");
+            ((HttpServletResponse) response).sendRedirect("redirect:/login/index.html");
             return;
         }
         chain.doFilter(request, response);
