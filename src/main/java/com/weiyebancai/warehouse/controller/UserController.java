@@ -107,7 +107,7 @@ public class UserController {
     }
 
     /**
-     * Tina及商品库存变更记录
+     * 变更库存以及商品库存变更记录
      *
      * @return
      */

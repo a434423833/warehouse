@@ -95,6 +95,9 @@ public class UserServer {
     @Transactional(rollbackFor = RuntimeException.class)
     public void insertRecord(String productId, Integer recordCount, String remark, String username) {
         ProductPO productPO = userDao.findOneProduct(productId);
+        if (recordCount < 0 && productPO.getProductCount() + recordCount < 0 ? true : false) {
+            throw new RuntimeException("减少库存数不能超过当前的库存");
+        }
         RecordPO po = new RecordPO();
         po.setProductId(productId);
         po.setRemark(remark);

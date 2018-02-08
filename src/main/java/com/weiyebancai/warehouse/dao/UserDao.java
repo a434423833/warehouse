@@ -76,6 +76,8 @@ public class UserDao {
         }
         if (page.getOrderBy() != null) {
             query.with(new Sort(new Sort.Order(page.getOrderBy().equals("asc") ? Sort.Direction.ASC : Sort.Direction.DESC, "productCategory")));
+            query.with(new Sort(new Sort.Order(page.getOrderBy().equals("asc") ? Sort.Direction.ASC : Sort.Direction.DESC, "productBrand")));
+
         }
         //分页
         query.skip((page.getPageNum() - 1) * page.getPageSize());

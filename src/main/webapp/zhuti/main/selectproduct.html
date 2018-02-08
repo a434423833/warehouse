@@ -200,6 +200,7 @@
         ['轻钢龙骨', '扣条', '木方', '枪钉', '合页', '拉手', '免钉胶', '小五金'],
         ['其他', '其他']
     ];
+
     function bodyonload() {
         var str = "";
         for (var i = 0; i < data.length; i++) {
@@ -207,6 +208,7 @@
         }
         $("#fatherleibie").html(str);
     }
+
     function leimuchange(obj) {
         var index = obj.selectedIndex;
         var str = "";
@@ -215,6 +217,7 @@
         }
         $("#chirdleibie").html(str);
     }
+
     function searchClick(pageNum, pages) {
         var productName = $("#productName").val();
         var productBrand = $("#productbrand").val();
@@ -256,20 +259,20 @@
                     var str = ""
                     for (var i = 0; i < obj.data.length; i++) {
                         str += "<tr  class='odd gradeX ng-scope'>" +
-                            "<td class='ng-binding'>" + (i + 1) + "</td>" +
+                            "<td class='ng-binding'>" + (i + 1 + (obj.page.pageNum - 1) * obj.page.pageSize) + "</td>" +
                             "<td  class='ng-binding'>" + obj.data[i].productCategory + "</td>" +
                             "<td  class='ng-binding'>" + obj.data[i].productName + "</td>" +
                             "<td class='ng-binding'>" + obj.data[i].productBrand + " </td>" +
                             "<td class='ng-binding'>" + obj.data[i].productCount + "</td>" +
                             "<td  class='ng-binding'>" + obj.data[i].productWarehouse + "</td>" +
-                            "<td class='ng-binding'> <a class='btn btn-info btn-xs' href='../main/selectrocord.html?id=\'" + obj.data[i].id + "\'> 库存变更明细</a >&nbsp;&nbsp;&nbsp; " +
+                            "<td class='ng-binding'> <a class='btn btn-info btn-xs' href='../main/selectrocord.html?id=" + obj.data[i].id + "'> 库存变更明细</a >&nbsp;&nbsp;&nbsp; " +
                             "<button  class='btn btn-primary btn-xs' onclick='getId(&apos;" + obj.data[i].id + "&apos;)'>变更库存</a></td></tr>";
                     }
                     $("#selectBody").html(str);
                     if (str == "") {
                         $("#selectBody").html("没有查找到商品");
                     }
-                    $("#fanye").html("每页 " + obj.page.pageSize + "条 | 共 " + obj.page.total + "条记录 | 当前第 " + obj.page.pageNum + " 页 | 共 " + obj.page.pages + " 页" +
+                    $("#fanye").html("每页 " + obj.page.pageSize + "条 | 共 " + obj.page.total + "条记录 | 当前第<span id='dangqianpage'> " + obj.page.pageNum + " </span>页 | 共 " + obj.page.pages + " 页" +
                         "| <a onclick='searchClick(" + (obj.page.pageNum - 1) + "," + obj.page.pages + ")'> 上一页 </a>" +
                         "| <a onclick='searchClick(" + (obj.page.pageNum + 1) + "," + obj.page.pages + ")'> 下一页 </a>" +
                         "| <a onclick='searchClick(1,1)'> 首页 </a>" +
@@ -283,6 +286,7 @@
         });
 
     }
+
     function resetClick() {
         $("#productName").val("");
         var str = "";
@@ -295,10 +299,12 @@
         $("#productbrand").val("");
 
     }
+
     function getId(id) {
         $('#modelHid').val(id);
         $('#myModal1').modal();
     }
+
     function onchangeProduct() {
         var id = $('#modelHid').val();
         var recordCount = $('#recordCount').val();
@@ -321,21 +327,21 @@
         $.ajax({
             type: "POST",      //传输方式
             url: "../../insertRecord", //地址
-            dataType: 'json',
-            contentType: 'application/json',
             data: {            //传递的参数
                 "productId": id,
                 "recordCount": recordCount,
                 "remark": remork
             },
             success: function (obj) {
-
+                $("#myModal1").modal('hide')
+                searchClick($("#dangqianpage").html(), "#dangqianpage").html();
             },
             error: function (data, type, err) {
                 $("#modelMsg").html(+data.responseJSON.status + ":" + data.responseJSON.message);
                 $('#myModal').modal();
             }
-        });
+        })
+        ;
     }
 </script>
 
@@ -372,8 +378,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                 <button type="button" class="btn btn-primary" onclick="onchangeProduct()">确认</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
             </div>
         </div>
     </div>

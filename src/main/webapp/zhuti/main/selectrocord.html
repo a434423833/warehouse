@@ -98,50 +98,13 @@
                                                                 <th>描述</th>
                                                             </tr>
                                                             </thead>
-                                                            <tbody>
-                                                            <tr class="odd gradeX ng-scope"
-                                                                ng-repeat="item in vm.items">
-                                                                <td class="ng-binding">1
-                                                                </td>
-                                                                <td ng-bind="item.orderNo" class="ng-binding">
-                                                                    手动删除
-                                                                </td>
-
-                                                                <!--原库存数-->
-                                                                <td><span
-                                                                        class="label label-sm label-primary ng-binding">
-                                                                    -38件0瓶</span></td>
-                                                                <!--变更数量-->
-                                                                <td>
-                                                                    <!-- ngIf: item.addStorelarge>=0 && item.addStoreSmall>=0 --><span
-                                                                        class="label label-sm label-success ng-binding ng-scope"
-                                                                        ng-if="item.addStorelarge>=0 &amp;&amp; item.addStoreSmall>=0">
-										                      100件0瓶
-										                  </span>
-                                                                    <!-- end ngIf: item.addStorelarge>=0 && item.addStoreSmall>=0 -->
-                                                                    <!-- ngIf: item.addStorelarge<0 || item.addStoreSmall<0 -->
-                                                                </td>
-                                                                <!-- 新库存数  -->
-                                                                <td><span
-                                                                        class="label label-sm label-primary ng-binding">
-									                      62件
-									                      0瓶</span></td>
-                                                                <!-- 时间 -->
-                                                                <td ng-bind="item.createTime | date:'yyyy-MM-dd HH:mm:ss'"
-                                                                    class="ng-binding">2018-02-06 02:04:59
-                                                                </td>
-                                                                <!-- 操作人 -->
-                                                                <td ng-bind="item.createUser" class="ng-binding">黄正全
-                                                                </td>
-                                                                <!-- 描述 -->
-                                                                <td ng-bind="item.des" class="ng-binding">【供应链】删除销售出库单
-                                                                </td>
-                                                            </tr>
+                                                            <tbody id="selectBody">
+                                                            <!--ajax回显-->
                                                             </tbody>
                                                         </table>
                                                     </div>
 
-                                                    <h5 class="ng-binding">每页 20条 | 共 23 条记录
+                                                    <h5 class="ng-binding" id="pageBody">每页 20条 | 共 23 条记录
                                                         | 当前第 1 页 | 共 2 页</h5>
 
                                                 </div>
@@ -165,6 +128,7 @@
         var id = url.substring(4, url.length);
         selectRecord(id, 1, 1);
     }
+
     function selectRecord(id, pageNum, pages) {
         $.ajax({
             type: "POST",      //传输方式
@@ -180,7 +144,29 @@
                 }
             }),
             success: function (obj) {
-
+                if (obj.success == true) {
+                    var str = "";
+                    for (var i = 0; i < obj.data.length; i++) {
+                        var data = obj.data[i];
+                        str += "<tr class='odd gradeX ng-scope'\n" +
+                            " ng-repeat='item in vm.items'>\n" +
+                            " <td class='ng-binding'>" + (i + 1 + (obj.page.pageNum - 1) * obj.page.pageSize) + "</td>\n" +
+                            " <td ng-bind='item.orderNo' class='ng-binding'>" + data.incident + "</td>" +
+                            " <td><span class='label label-sm label-primary ng-binding'>" + data.beginCount + "</span></td>\n" +
+                            "<td> <span class='label label-sm label-success ng-binding ng-scope'>" + data.recordCount + "</span></td>" +
+                            "<td><span class='label label-sm label-primary ng-binding'>" + data.endCount + "</span></td>\n" +
+                            "<td >" + data.time + "</td>" +
+                            " <td ng-bind='item.createUser' class='ng-binding'>" + data.userName + "</td>\n" +
+                            "<td ng-bind='item.des' class='ng-binding'>" + data.remark + "</td>" +
+                            "</tr>"
+                    }
+                    $("#selectBody").html(str);
+                    $("#pageBody").html("每页 " + obj.page.pageSize + "条 | 共 " + obj.page.total + "条记录 | 当前第<span id='dangqianpage'> " + obj.page.pageNum + " </span>页 | 共 " + obj.page.pages + " 页" +
+                        "| <a onclick='selectRecord(&apos;" + obj.data[0].productId + "&apos;," + (obj.page.pageNum - 1) + "," + obj.page.pages + ")'> 上一页 </a>" +
+                        "| <a onclick='selectRecord(&apos;" + obj.data[0].productId + "&apos;," + (obj.page.pageNum + 1) + "," + obj.page.pages + ")'> 下一页 </a>" +
+                        "| <a onclick='selectRecord(&apos;" + obj.data[0].productId + "&apos;,1,1)'> 首页 </a>" +
+                        "| <a onclick='selectRecord(&apos;" + obj.data[0].productId + "&apos;," + obj.page.pages + "," + obj.page.pages + ")'>尾页 </a>");
+                }
             },
             error: function (data, type, err) {
                 $("#modelMsg").html(+data.responseJSON.status + ":" + data.responseJSON.message);
