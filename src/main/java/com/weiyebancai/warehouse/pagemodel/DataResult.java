@@ -14,6 +14,11 @@ public class DataResult<T> extends BaseResult {
         this.setData(data);
     }
 
+    public DataResult(T data, Page page) {
+        this.setData(data);
+        this.setPage(page);
+    }
+
     public T getData() {
         return data;
     }

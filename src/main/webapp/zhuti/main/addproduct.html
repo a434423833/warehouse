@@ -39,7 +39,7 @@
     <script src="../../js/bootstrap.min.js"></script>
 </head>
 <body class="page-header-fixed page-style-square ng-scope block-ui block-ui-anim-fade"
-        aria-busy="false" onload="bodyonload()">
+      aria-busy="false" onload="bodyonload()">
 
 <div class="page-content-wrapper">
     <div class="page-content" id="dataLoading" style="min-height:813px">
@@ -161,7 +161,7 @@
                                     <div class="row">
                                         <div class="col-md-7 col-md-offset-5">
                                             <button type="button" class="btn btn-primary"
-                                                    onclick="searchClick()"> 添加
+                                                    onclick="searchClick(this)"> 添加
                                             </button>
                                             <button type="button" class="btn btn-default"
                                                     onclick="resetClick()">清空
@@ -228,7 +228,7 @@
         $("#chirdleibie").html(str);
     }
 
-    function searchClick() {
+    function searchClick(thisobj) {
         var productName = $("#productName").val();
         var productCategory = $("#chirdleibie").val();
         var productCount = $("#productCount").val();
@@ -266,6 +266,7 @@
             $("#tishi5").html("小数只可填写两位小数");
             return;
         }
+        $(thisobj).attr("disabled", "disabled"); //设置变灰按钮
         $("#tishi5").html("");
         $.ajax({
             type: "POST",      //传输方式
@@ -283,9 +284,11 @@
             success: function (obj) {
                 if (obj.code == 0) {
                     resetClick();
+                    $(thisobj).attr("disabled", false);
                 }
             },
             error: function (data, type, err) {
+                $(thisobj).attr("disabled", false);
                 $("#modelMsg").html(+data.responseJSON.status + ":" + data.responseJSON.message);
                 $('#myModal').modal();
             }

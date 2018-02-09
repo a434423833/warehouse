@@ -2,9 +2,7 @@ package com.weiyebancai.warehouse.service;
 
 import com.weiyebancai.warehouse.dao.UserDao;
 import com.weiyebancai.warehouse.pagemodel.DataResult;
-import com.weiyebancai.warehouse.pagemodel.Page;
 import com.weiyebancai.warehouse.pojo.*;
-import com.weiyebancai.warehouse.pojo.enumclass.UserEnum;
 import com.weiyebancai.warehouse.utile.Md5;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,8 +79,15 @@ public class UserServer {
      * @param productReocrdDTO
      * @return
      */
-    public DataResult<List<RecordPO>> selectRecord(ProductReocrdDTO productReocrdDTO) {
-        return userDao.selectRecord(productReocrdDTO);
+    public DataResult<ProductRecordVO> selectRecord(ProductReocrdDTO productReocrdDTO) {
+        ProductRecordVO productRecordVO = new ProductRecordVO();
+        ProductPO po = userDao.findOneProduct(productReocrdDTO.getProductId());
+        productRecordVO.setProductId(po.getId());
+        productRecordVO.setProductName(po.getProductName());
+        productRecordVO.setProductWarehouse(po.getProductWarehouse());
+        DataResult<List<RecordPO>> dataResult = userDao.selectRecord(productReocrdDTO);
+        productRecordVO.setList(dataResult.getData());
+        return new DataResult<ProductRecordVO>(productRecordVO, dataResult.getPage());
     }
 
     /**

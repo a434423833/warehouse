@@ -57,8 +57,8 @@
                                         <div class="form-group">
                                             <label class="control-label col-md-3">产品名称:</label>
                                             <div class="col-md-9">
-                                                <p class="form-control-static " ng-id="productName">
-                                                    法国卡斯特邦塞干红葡萄酒12.5度750ml（测试）</p>
+                                                <p class="form-control-static " id="productName">
+                                                </p>
                                             </div>
                                         </div>
                                     </div>
@@ -67,7 +67,7 @@
                                             <label class="control-label col-md-3">所属仓库:</label>
                                             <div class="col-md-9">
                                                 <p class="form-control-static " id="productWarehouse">
-                                                    西藏自治区拉萨市</p>
+                                                </p>
                                             </div>
                                         </div>
                                     </div>
@@ -149,8 +149,8 @@
             success: function (obj) {
                 if (obj.success == true) {
                     var str = "";
-                    for (var i = 0; i < obj.data.length; i++) {
-                        var data = obj.data[i];
+                    for (var i = 0; i < obj.data.list.length; i++) {
+                        var data = obj.data.list[i];
                         str += "<tr class='odd gradeX ng-scope'\n" +
                             " ng-repeat='item in vm.items'>\n" +
                             " <td class='ng-binding'>" + (i + 1 + (obj.page.pageNum - 1) * obj.page.pageSize) + "</td>\n" +
@@ -163,12 +163,14 @@
                             "<td ng-bind='item.des' class='ng-binding'>" + data.remark + "</td>" +
                             "</tr>"
                     }
+                    $("#productName").html(obj.data.productName);
+                    $("#productWarehouse").html(obj.data.productWarehouse);
                     $("#selectBody").html(str);
                     $("#pageBody").html("每页 " + obj.page.pageSize + "条 | 共 " + obj.page.total + "条记录 | 当前第<span id='dangqianpage'> " + obj.page.pageNum + " </span>页 | 共 " + obj.page.pages + " 页" +
-                        "| <a onclick='selectRecord(&apos;" + obj.data[0].productId + "&apos;," + (obj.page.pageNum - 1) + "," + obj.page.pages + ")'> 上一页 </a>" +
-                        "| <a onclick='selectRecord(&apos;" + obj.data[0].productId + "&apos;," + (obj.page.pageNum + 1) + "," + obj.page.pages + ")'> 下一页 </a>" +
-                        "| <a onclick='selectRecord(&apos;" + obj.data[0].productId + "&apos;,1,1)'> 首页 </a>" +
-                        "| <a onclick='selectRecord(&apos;" + obj.data[0].productId + "&apos;," + obj.page.pages + "," + obj.page.pages + ")'>尾页 </a>");
+                        "| <a onclick='selectRecord(&apos;" + obj.data.list[0].productId + "&apos;," + (obj.page.pageNum - 1) + "," + obj.page.pages + ")'> 上一页 </a>" +
+                        "| <a onclick='selectRecord(&apos;" + obj.data.list[0].productId + "&apos;," + (obj.page.pageNum + 1) + "," + obj.page.pages + ")'> 下一页 </a>" +
+                        "| <a onclick='selectRecord(&apos;" + obj.data.list[0].productId + "&apos;," + 1 + "," + 1 + ")'> 首页 </a>" +
+                        "| <a onclick='selectRecord(&apos;" + obj.data.list[0].productId + "&apos;," + obj.page.pages + "," + obj.page.pages + ")'>尾页 </a>");
                 }
             },
             error: function (data, type, err) {

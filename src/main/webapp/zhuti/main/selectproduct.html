@@ -306,7 +306,7 @@
         $('#myModal1').modal();
     }
 
-    function onchangeProduct() {
+    function onchangeProduct(thisobj) {
         var id = $('#modelHid').val();
         var recordCount = $('#recordCount').val();
         var remork = $('#remork').val();
@@ -325,6 +325,7 @@
             return;
         }
         $("#recordTishi").html("");
+        $(thisobj).attr("disabled", true); //设置变灰按钮
         $.ajax({
             type: "POST",      //传输方式
             url: "../../insertRecord", //地址
@@ -334,10 +335,12 @@
                 "remark": remork
             },
             success: function (obj) {
-                $("#myModal1").modal('hide')
+                $(thisobj).attr("disabled", false); //设置变灰按钮
+                $("#myModal1").modal('hide');
                 searchClick($("#dangqianpage").html(), "#dangqianpage").html();
             },
             error: function (data, type, err) {
+                $(thisobj).attr("disabled", false); //设置变灰按钮
                 $("#modelMsg").html(+data.responseJSON.status + ":" + data.responseJSON.message);
                 $('#myModal').modal();
             }
@@ -379,7 +382,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" onclick="onchangeProduct()">确认</button>
+                <button type="button" class="btn btn-primary" onclick="onchangeProduct(this)">确认</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
             </div>
         </div>

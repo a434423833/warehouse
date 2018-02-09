@@ -102,7 +102,7 @@ public class UserController {
     public BaseResult selectRecord(@RequestBody ProductReocrdDTO productReocrdDTO) {
         Assert.notNull(productReocrdDTO, "DTO为null");
         Assert.notNull(productReocrdDTO.getProductId(), "商品id不能为null");
-        DataResult<List<RecordPO>> dataResult = userServer.selectRecord(productReocrdDTO);
+        DataResult<ProductRecordVO> dataResult = userServer.selectRecord(productReocrdDTO);
         return dataResult;
     }
 
