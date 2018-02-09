@@ -166,9 +166,9 @@
                                         <th>序号</th>
                                         <th>类别</th>
                                         <th>产品名称</th>
-                                        <th>品牌</th>
                                         <th>所剩库存</th>
                                         <th>所在仓库</th>
+                                        <th>品牌</th>
                                         <!-- <th>负责人</th>-->
                                         <th>操作</th>
                                     </tr>
@@ -207,6 +207,7 @@
             str += "<option>" + data[i] + "</option> ";
         }
         $("#fatherleibie").html(str);
+        searchClick(1, 1);
     }
 
     function leimuchange(obj) {
@@ -262,9 +263,9 @@
                             "<td class='ng-binding'>" + (i + 1 + (obj.page.pageNum - 1) * obj.page.pageSize) + "</td>" +
                             "<td  class='ng-binding'>" + obj.data[i].productCategory + "</td>" +
                             "<td  class='ng-binding'>" + obj.data[i].productName + "</td>" +
-                            "<td class='ng-binding'>" + obj.data[i].productBrand + " </td>" +
                             "<td class='ng-binding'>" + obj.data[i].productCount + "</td>" +
                             "<td  class='ng-binding'>" + obj.data[i].productWarehouse + "</td>" +
+                            "<td class='ng-binding'>" + obj.data[i].productBrand + " </td>" +
                             "<td class='ng-binding'> <a class='btn btn-info btn-xs' href='../main/selectrocord.html?id=" + obj.data[i].id + "'> 库存变更明细</a >&nbsp;&nbsp;&nbsp; " +
                             "<button  class='btn btn-primary btn-xs' onclick='getId(&apos;" + obj.data[i].id + "&apos;)'>变更库存</a></td></tr>";
                     }

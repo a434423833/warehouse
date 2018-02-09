@@ -1,11 +1,14 @@
 package com.weiyebancai.warehouse.dao;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
 import com.weiyebancai.warehouse.pagemodel.DataResult;
 import com.weiyebancai.warehouse.pagemodel.Page;
 import com.weiyebancai.warehouse.pojo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.BasicQuery;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
@@ -61,7 +64,15 @@ public class UserDao {
     public DataResult<List<ProductPO>> selectProduct(ProductSelectDTO productSelectDTO) {
         DataResult<List<ProductPO>> dataResult = new DataResult();
         Page page = productSelectDTO.getPage();
-        Query query = new Query();
+        DBObject dbObject = new BasicDBObject();
+        BasicDBObject fieldsObject = new BasicDBObject();
+        fieldsObject.put("_id", true);
+        fieldsObject.put("productName", true);
+        fieldsObject.put("productCategory", true);
+        fieldsObject.put("productCount", true);
+        fieldsObject.put("productWarehouse", true);
+        fieldsObject.put("productBrand", true);
+        Query query = new BasicQuery(dbObject, fieldsObject);
         if (productSelectDTO.getProductBrand() != null) {
             query.addCriteria(Criteria.where("productBrand").regex(".*?" + productSelectDTO.getProductBrand() + ".*"));
         }
@@ -77,7 +88,8 @@ public class UserDao {
         if (page.getOrderBy() != null) {
             query.with(new Sort(new Sort.Order(page.getOrderBy().equals("asc") ? Sort.Direction.ASC : Sort.Direction.DESC, "productCategory")));
             query.with(new Sort(new Sort.Order(page.getOrderBy().equals("asc") ? Sort.Direction.ASC : Sort.Direction.DESC, "productBrand")));
-
+            query.with(new Sort(new Sort.Order(page.getOrderBy().equals("asc") ? Sort.Direction.ASC : Sort.Direction.DESC, "productName")));
+            query.with(new Sort(new Sort.Order(page.getOrderBy().equals("asc") ? Sort.Direction.ASC : Sort.Direction.DESC, "productWarehouse")));
         }
         //分页
         query.skip((page.getPageNum() - 1) * page.getPageSize());

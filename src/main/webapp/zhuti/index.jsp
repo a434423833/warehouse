@@ -76,7 +76,7 @@
             menu: [{
                 text: '出库单',
                 items: [
-                    {id: 'code', text: '查看出库单', href: 'form/selectproduct.html'},
+                    {id: 'code', text: '查看出库单', href: 'form/advalid.html'},
                     {id: 'example', text: '添加出库单', href: 'form/example.html'},
                     {id: 'introduce', text: '删除出库单', href: 'form/introduce.html'},
                 ]
@@ -98,7 +98,7 @@
             menu: [{
                 text: '利润管理',
                 items: [
-                    {id: 'code', text: '今日利润', href: 'search/selectproduct.html'},
+                    {id: 'code', text: '今日利润', href: 'search/code.html'},
                     {id: 'example', text: '利润统计', href: 'search/example.html'}
                 ]
             }]
@@ -117,7 +117,7 @@
             menu: [{
                 text: '账号管理',
                 items: [
-                    {id: 'code', text: '查看所有账号', href: 'chart/selectproduct.html'},
+                    {id: 'code', text: '查看所有账号', href: 'chart/area.html'},
                     {id: 'line', text: '添加仓管账号', href: 'chart/line.html'},
                     /* {id: 'area', text: '区域图', href: 'chart/area.html'},
                      {id: 'column', text: '柱状图', href: 'chart/column.html'},

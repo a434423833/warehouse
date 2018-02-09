@@ -53,7 +53,7 @@
                         <div class="portlet-body form">
                             <form class="form-horizontal ng-pristine ng-valid" action="#">
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-5">
                                         <div class="form-group">
                                             <label class="control-label col-md-3">产品名称:</label>
                                             <div class="col-md-9">
@@ -62,7 +62,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-5">
                                         <div class="form-group">
                                             <label class="control-label col-md-3">所属仓库:</label>
                                             <div class="col-md-9">
@@ -70,6 +70,9 @@
                                                     西藏自治区拉萨市</p>
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="col-md-2" style="margin-top: 15px">
+                                        <a href="../main/selectproduct.html" style="font-size: 20px">点击返回</a>
                                     </div>
                                 </div>
                             </form>
@@ -155,7 +158,7 @@
                             " <td><span class='label label-sm label-primary ng-binding'>" + data.beginCount + "</span></td>\n" +
                             "<td> <span class='label label-sm label-success ng-binding ng-scope'>" + data.recordCount + "</span></td>" +
                             "<td><span class='label label-sm label-primary ng-binding'>" + data.endCount + "</span></td>\n" +
-                            "<td >" + data.time + "</td>" +
+                            "<td >" + formationDate(new Date(data.time)) + "</td>" +
                             " <td ng-bind='item.createUser' class='ng-binding'>" + data.userName + "</td>\n" +
                             "<td ng-bind='item.des' class='ng-binding'>" + data.remark + "</td>" +
                             "</tr>"
@@ -173,6 +176,18 @@
                 $('#myModal').modal();
             }
         });
+    }
+
+    function formationDate(datetime) {
+        var month = datetime.getMonth();
+        var day = datetime.getDay();
+        if (month >= 1 && month <= 9) {
+            month = "0" + month;
+        }
+        if (day >= 0 && day <= 9) {
+            day = "0" + day;
+        }
+        return datetime.getFullYear() + "-" + month + "-" + day + "&nbsp;" + datetime.getHours() + ":" + datetime.getMinutes() + ":" + datetime.getSeconds();
     }
 </script>
 

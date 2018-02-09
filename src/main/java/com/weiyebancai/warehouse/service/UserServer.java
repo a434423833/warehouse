@@ -86,7 +86,7 @@ public class UserServer {
     }
 
     /**
-     * 添加商品库存变更记录
+     * 添加商品以及库存变更记录
      *
      * @param productId
      * @param recordCount
