@@ -4,14 +4,28 @@
 <head>
     <title>伟业板材 管理系统</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" type="text/css" href="../css/loader.css">
     <link href="assets/css/dpl-min.css" rel="stylesheet" type="text/css"/>
     <link href="assets/css/bui-min.css" rel="stylesheet" type="text/css"/>
     <link href="assets/css/main-min.css" rel="stylesheet" type="text/css"/>
     <script src='../js/bootstrap.min.css'></script>
     <script src='../js/jquery-2.1.0.js'></script>
     <script src='../js/bootstrap.min.js'></script>
+    <script type="text/javascript">
+        // 等待所有加载
+        $(window).load(function () {
+            $('body').addClass('loaded');
+            $('#loader-wrapper .load_title').remove();
+        });
+    </script>
 </head>
 <body>
+<div id="loader-wrapper">
+    <div id="loader"></div>
+    <div class="loader-section section-left"></div>
+    <div class="loader-section section-right"></div>
+    <div class="load_title">正在拼命加载中<br><span></span></div>
+</div>
 
 <div class="header">
     <div class="dl-title">
