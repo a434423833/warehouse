@@ -35,10 +35,10 @@ public class BaseResult {
      */
     private Integer totalCount = 0;
 
-    public BaseResult() {
+
+    public BaseResult(){
 
     }
-
     public BaseResult(int result, String error) {
         setSuccess(false);
         this.setStatus(result);

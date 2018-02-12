@@ -51,7 +51,7 @@
                 <div class="nav-item-inner nav-home">库存管理</div>
             </li>
             <li class="nav-item">
-                <div class="nav-item-inner nav-order">出入单管理</div>
+                <div class="nav-item-inner nav-order">订单管理</div>
             </li>
             <li class="nav-item">
                 <div class="nav-item-inner nav-inventory">利润管理</div>
@@ -88,11 +88,11 @@
         }, {
             id: 'form',
             menu: [{
-                text: '出库单',
+                text: '订单管理',
                 items: [
-                    {id: 'code', text: '查看出库单', href: 'form/advalid.html'},
-                    {id: 'example', text: '添加出库单', href: 'form/example.html'},
-                    {id: 'introduce', text: '删除出库单', href: 'form/introduce.html'},
+                    {id: 'code', text: '查看订单', href: 'form/selectOrder.html'},
+                    {id: 'example', text: '生成订单', href: 'form/createOrder.html'},
+                    {id: 'introduce', text: '删除出w库单', href: 'form/introduce.html'},
                 ]
             }, {
                 text: '入库单',
@@ -113,7 +113,7 @@
                 text: '利润管理',
                 items: [
                     {id: 'code', text: '今日利润', href: 'search/code.html'},
-                    {id: 'example', text: '利润统计', href: 'search/example.html'}
+                    {id: 'example', text: '利润统计', href: 'search/selectOrder.html'}
                 ]
             }]
         }, {
@@ -122,7 +122,7 @@
              text: '详情页面',
              items: [
              {id: 'code', text: '详情页面代码', href: 'detail/selectproduct.html'},
-             {id: 'example', text: '详情页面示例', href: 'detail/example.html'},
+             {id: 'example', text: '详情页面示例', href: 'detail/selectOrder.html'},
              {id: 'introduce', text: '详情页面简介', href: 'detail/introduce.html'}
              ]
              }]*/

@@ -1,5 +1,6 @@
 package com.weiyebancai.warehouse.service;
 
+import com.weiyebancai.warehouse.dao.ProductDao;
 import com.weiyebancai.warehouse.dao.UserDao;
 import com.weiyebancai.warehouse.pagemodel.DataResult;
 import com.weiyebancai.warehouse.pojo.*;
@@ -19,6 +20,8 @@ import java.util.List;
 public class UserServer {
     @Autowired
     private UserDao userDao;
+    @Autowired
+    private ProductDao productDao;
 
     /**
      * 用户登录
@@ -40,80 +43,4 @@ public class UserServer {
         return null;
     }
 
-    /**
-     * 添加商品
-     *
-     * @param productDTO
-     */
-    @Transactional(rollbackFor = RuntimeException.class)
-    public void insertProduct(ProductDTO productDTO, UserVO userVO) {
-        ProductPO productPO = new ProductPO();
-        BeanUtils.copyProperties(productDTO, productPO);
-        userDao.insertProduct(productPO);
-        RecordPO po = new RecordPO();
-        po.setProductId(productPO.getId());
-        po.setIncident("手动操作添加");
-        po.setTime(new Date());
-        po.setRecordCount(productPO.getProductCount());
-        po.setUserName(userVO.getUsername());
-        po.setBeginCount(0);
-        po.setEndCount(po.getRecordCount());
-        po.setRemark("[管理员]手动添加");
-        userDao.insertRecord(po);
-
-    }
-
-    /**
-     * 查找商品
-     *
-     * @param productSelectDTO
-     * @return
-     */
-    public DataResult<List<ProductPO>> selectProduct(ProductSelectDTO productSelectDTO) {
-        return userDao.selectProduct(productSelectDTO);
-    }
-
-    /**
-     * 查找商品库存变更记录
-     *
-     * @param productReocrdDTO
-     * @return
-     */
-    public DataResult<ProductRecordVO> selectRecord(ProductReocrdDTO productReocrdDTO) {
-        ProductRecordVO productRecordVO = new ProductRecordVO();
-        ProductPO po = userDao.findOneProduct(productReocrdDTO.getProductId());
-        productRecordVO.setProductId(po.getId());
-        productRecordVO.setProductName(po.getProductName());
-        productRecordVO.setProductWarehouse(po.getProductWarehouse());
-        DataResult<List<RecordPO>> dataResult = userDao.selectRecord(productReocrdDTO);
-        productRecordVO.setList(dataResult.getData());
-        return new DataResult<ProductRecordVO>(productRecordVO, dataResult.getPage());
-    }
-
-    /**
-     * 添加商品以及库存变更记录
-     *
-     * @param productId
-     * @param recordCount
-     * @param remark
-     */
-    @Transactional(rollbackFor = RuntimeException.class)
-    public void insertRecord(String productId, Integer recordCount, String remark, String username) {
-        ProductPO productPO = userDao.findOneProduct(productId);
-        if (recordCount < 0 && productPO.getProductCount() + recordCount < 0 ? true : false) {
-            throw new RuntimeException("减少库存数不能超过当前的库存");
-        }
-        RecordPO po = new RecordPO();
-        po.setProductId(productId);
-        po.setRemark(remark);
-        po.setBeginCount(productPO.getProductCount());
-        po.setRecordCount(recordCount);
-        po.setEndCount(productPO.getProductCount() + recordCount);
-        po.setTime(new Date());
-        po.setIncident("手动操作修改");
-        po.setUserName(username);
-        userDao.insertRecord(po);
-        productPO.setProductCount(productPO.getProductCount() + recordCount);
-        userDao.updateProduct(productPO);
-    }
 }

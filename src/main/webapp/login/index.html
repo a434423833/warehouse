@@ -15,8 +15,25 @@ License URL: http://creativecommons.org/licenses/by/3.0/
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta name="keywords" content="后台登录"/>
     <script src="../js/jquery-2.1.0.js"></script>
+    <script src="../js/bootstrap.min.css"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/loader.css">
+    <script type="text/javascript">
+        // 等待所有加载
+        $(window).load(function () {
+            $('body').addClass('loaded');
+            $('#loader-wrapper .load_title').remove();
+        });
+    </script>
 </head>
 <body>
+<div id="loader-wrapper">
+    <div id="loader"></div>
+    <div class="loader-section section-left"></div>
+    <div class="loader-section section-right"></div>
+    <div class="load_title">正在拼命加载中<br><span></span></div>
+</div>
+
 <!--header start here-->
 <div class="login-form">
     <div class="top-login">
@@ -39,33 +56,46 @@ License URL: http://creativecommons.org/licenses/by/3.0/
             </div>
             <div style="color: red;height: 30px" id="tishi"></div>
             <div class="log-bwn" style="margin-top: 10px">
-                <input type="submit" value="点击登录" onclick="return click2()">
+                <input type="submit" value="点击登录" onclick="return click2(this)">
             </div>
         </form>
     </div>
 </div>
 </body>
 <script type="text/javascript">
-    function click2() {
+    function click2(thisobj) {
         var account = $("#username").val();
         var password = $("#password").val();
+        $(thisobj).attr("disabled", "disabled"); //设置变灰按钮
         $.ajax({
                 type: "POST",      //传输方式
                 url: "../userLogin",           //地址
-                data: {            //传递的参数
-                    "account": account,
-                    "password": password
-                },
+                dataType: 'json',
+                contentType: 'application/json',
+                data: JSON.stringify(
+                    {            //传递的参数
+                        "account": account,
+                        "password": password
+                    }
+                )
+                ,
                 success: function (obj) {
                     if (obj.code == '0') {
                         window.location.href = "../zhuti/index.jsp";
+                        $(thisobj).attr("disabled", false); //设置变灰按钮
                     } else {
                         $("#username").val(account);
                         $("#password").val(password);
                         $("#tishi").html(obj.msg)
+                        $(thisobj).attr("disabled", false); //设置变灰按钮
                     }
-
                 }
+                    /*  ,
+                     error: function (data, type, err) {
+                     $("#modelMsg").html(data.responseJSON.status + ":" + data.responseJSON.message);
+                     $('#myModal').modal();
+                     $(thisobj).attr("disabled", false); //设置变灰按钮
+                     }*/
             }
         )
         ;

@@ -3,7 +3,7 @@
 <html lang="zh-cn"><!--<![endif]--><!-- BEGIN HEAD -->
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>伟业查询后台</title>
+    <title>生成订单</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta content="width=device-width, initial-scale=1" name="viewport">
 
@@ -34,6 +34,8 @@
     <link href="../weiyebancai/custom(1).css" rel="stylesheet" type="text/css">
     <link href="../weiyebancai/SelectSearch.css" rel="stylesheet" type="text/css">
     <link href="../weiyebancai/add-picture.css" rel="stylesheet" type="text/css">
+    <script src="../../js/bootstrap-datetimepicker.css"></script>
+    <script src="../../js/bootstrap-datetimepicker.js"></script>
     <script src="../../js/jquery-2.1.0.js"></script>
     <script src="../../js/bootstrap.min.js"></script>
     <script src="../../js/bootstrap.min.css "></script>
@@ -62,7 +64,11 @@
     <div class="page-content" id="dataLoading" style="min-height:813px">
         <div data-ui-view="" class="fade-in-up ng-scope">
             <div data-page-top="">
-                <h3 class="page-title ng-binding" data-ng-bind="$state.current.data.pageTitle">仓库库存</h3>
+                <h3 class="page-title ng-binding" data-ng-bind="$state.current.data.pageTitle">订单生成
+                    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal1"
+                            onclick="searchClick()"> 生成订单
+                    </button>
+                </h3>
             </div>
             <div class="row" data-page-content="">
                 <div class="col-md-12">
@@ -164,16 +170,15 @@
                                     <div class="row">
                                         <div class="col-md-7 col-md-offset-5">
                                             <button type="button" class="btn btn-primary"
-                                                    onclick="searchClick()"> 查询
+                                                    onclick="searchClickOrder()"> 查询
                                             </button>
                                             <button type="button" class="btn btn-default"
-                                                    onclick="resetClick()">清空
+                                                    onclick="resetClickOrder()">清空
                                             </button>
                                         </div>
                                     </div>
                                 </div>
                             </form>
-
                             <div class="table-container ng-scope" ng-init="findList()">
                                 <table class="table table-bordered table-hover table-striped " id="datatable_ajax">
                                     <thead>
@@ -207,56 +212,39 @@
 </div>
 <script type="text/javascript" src="../../js/sousuo.js"></script>
 <script type="text/javascript">
-
+    function onCreateOrder(thisobj) {
+        var remork = $("#createremork").val();
+        if (remork == null || remork == undefined || remork.length <= 0) {
+            $("#createOutStockTishi").html("请填写备注");
+            return;
+        }
+        $(thisobj).attr("disabled", "disabled"); //设置变灰按钮
+        $.ajax({
+            type: "GET",      //传输方式
+            url: "../../createOrder", //地址
+            dataType: 'json',
+            contentType: 'application/json',
+            data: {            //传递的参数
+                "remork": remork
+            },
+            success: function (obj) {
+                $(thisobj).attr("disabled", false);
+                $("#myModal1").modal('hide');
+            },
+            error: function (data, type, err) {
+                $("#modelMsg").html(+data.responseJSON.status + ":" + data.responseJSON.message);
+                $(thisobj).attr("disabled", false);
+                $('#myModal').modal();
+            }
+        });
+    }
     function getId(id) {
         $('#modelHid').val(id);
         $('#myModal1').modal();
     }
-
-    function onchangeProduct(thisobj) {
-        var id = $('#modelHid').val();
-        var recordCount = $('#recordCount').val();
-        var remork = $('#remork').val();
-        if (recordCount == null || recordCount == undefined || recordCount == "") {
-            $("#recordTishi").html("请填写变更数量");
-            return;
-        }
-        $("#recordTishi").html("");
-        if (!/^(0|[1-9][0-9]*|-[1-9][0-9]*)$/.test(recordCount)) {
-            $("#recordTishi").html("请变更数量需要为整数");
-            return;
-        }
-        $("#recordTishi").html("");
-        if (remork == null | remork == undefined || remork == "") {
-            $("#recordTishi").html("请填写原因");
-            return;
-        }
-        $("#recordTishi").html("");
-        $(thisobj).attr("disabled", true); //设置变灰按钮
-        $.ajax({
-            type: "POST",      //传输方式
-            url: "../../insertRecord", //地址
-            data: {            //传递的参数
-                "productId": id,
-                "recordCount": recordCount,
-                "remark": remork
-            },
-            success: function (obj) {
-                $(thisobj).attr("disabled", false); //设置变灰按钮
-                $("#myModal1").modal('hide');
-                searchClick($("#dangqianpage").html(), $("#dangqianpage").html());
-            },
-            error: function (data, type, err) {
-                $(thisobj).attr("disabled", false); //设置变灰按钮
-                $("#modelMsg").html(+data.responseJSON.status + ":" + data.responseJSON.message);
-                $('#myModal').modal();
-            }
-        })
-        ;
-    }
 </script>
 
-//变更库存模态框
+//生成出库单模态框
 <div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -264,32 +252,26 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                         aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title" id="myModalLabel1">库存变更</h4>
+                <h4 class="modal-title" id="myModalLabel1">生成出库单</h4>
             </div>
             <div class="modal-body" id="modelMsg1">
-                <div class="form-group" style="height: 80px">
+                <div class="form-group" style="height: 30px">
                     <input type="hidden" value="" id="modelHid">
                     <div class="col-md-2"></div>
                     <div class="col-md-9">
                         <table>
                             <tr style="height: 35px">
-                                <td>变更数量：</td>
-                                <td><input type="number" class="form-control" id="recordCount" style="height: 25px">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>变更原因：</td>
-                                <td><input type="type" class="form-control" id="remork" style="height: 25px">
+                                <td>生成备注：</td>
+                                <td><input type="text" class="form-control" id="createremork" style="height: 25px">
                                 </td>
                             </tr>
                         </table>
-                        <div style="color: red;margin-top: 5px">*正数增加，负数减少,所有操作都会被记录*</div>
-                        <div style="color: red;margin-top: 5px" id="recordTishi"></div>
+                        <div style="color: red;margin-top: 5px" id="createOutStockTishi"></div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" onclick="onchangeProduct(this)">确认</button>
+                <button type="button" class="btn btn-primary" onclick="onCreateOrder(this)">确认</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
             </div>
         </div>

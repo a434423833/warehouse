@@ -3,7 +3,7 @@
 <html lang="zh-cn"><!--<![endif]--><!-- BEGIN HEAD -->
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>伟业查询后台</title>
+    <title>生成出库单</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta content="width=device-width, initial-scale=1" name="viewport">
 
@@ -35,21 +35,22 @@
     <link href="../weiyebancai/SelectSearch.css" rel="stylesheet" type="text/css">
     <link href="../weiyebancai/add-picture.css" rel="stylesheet" type="text/css">
     <script src="../../js/jquery-2.1.0.js"></script>
+    <script src="../../js/bootstrap.min.css"></script>
     <script src="../../js/bootstrap.min.js"></script>
-    <script src="../../js/bootstrap.min.css "></script>
     <link rel="stylesheet" type="text/css" href="../../css/loader.css">
     <script type="text/javascript">
         // 等待所有加载
         $(window).load(function () {
             $('body').addClass('loaded');
             $('#loader-wrapper .load_title').remove();
+            $('.datepicker').datepicker();
         });
     </script>
 </head>
 <!-- END HEAD -->
 <!-- BEGIN BODY -->
 <body class="page-header-fixed page-style-square ng-scope block-ui block-ui-anim-fade"
-      aria-busy="false" onload="bodyonload(this)">
+      aria-busy="false" onload="bodyonloadOrder(this)">
 <div id="loader-wrapper">
     <div id="loader"></div>
     <div class="loader-section section-left"></div>
@@ -62,7 +63,7 @@
     <div class="page-content" id="dataLoading" style="min-height:813px">
         <div data-ui-view="" class="fade-in-up ng-scope">
             <div data-page-top="">
-                <h3 class="page-title ng-binding" data-ng-bind="$state.current.data.pageTitle">仓库库存</h3>
+                <h3 class="page-title ng-binding" data-ng-bind="$state.current.data.pageTitle">出库单查询</h3>
             </div>
             <div class="row" data-page-content="">
                 <div class="col-md-12">
@@ -82,49 +83,49 @@
                                     <div class="row ng-scope">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label class="col-md-3 control-label">产品名称：</label>
+                                                <label class="col-md-3 control-label">订单号：</label>
                                                 <div class="col-md-9">
                                                     <input type="text" name="product_name"
                                                            class="form-control "
-                                                           placehold="产品名称" id="productName">
+                                                           placehold="产品名称" id="noteno">
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label class="col-md-3 control-label">品牌：</label>
+                                                <label class="col-md-3 control-label">下单时间：</label>
                                                 <div class="col-md-9">
-                                                    <input type="text" name="productbrand"
-                                                           class="form-control " id="productbrand">
+                                                    <div class="input-group input-daterange date datepicker">
+                                                        <input type="text" class="form-control" id="beginTime">
+                                                        <div class="input-group-addon">
+                                                            <span class="glyphicon glyphicon-th"></span>
+                                                        </div>
+                                                        <span class="input-group-addon">到</span>
+                                                        <input type="text" class="form-control" id="endTime">
+                                                        <div class="input-group-addon">
+                                                            <span class="glyphicon glyphicon-th "></span>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-
                                     <div class="row ng-scope">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label class="col-md-3 control-label">产品类别：</label>
+                                                <label class="col-md-3 control-label">订单状态：</label>
                                                 <div class="col-md-9">
-                                                    <product-display-category display-category-vo="vo"
-                                                                              display-partner-category-id="vo.firstCategoryId"
-                                                                              display-subcategory-id="vo.secondCategoryId"
-                                                                              class="ng-isolate-scope">
+                                                    <product-display-category class="ng-isolate-scope">
                                                         <div class="row">
                                                             <div class="col-md-3">
                                                                 <select class="form-control"
-                                                                        onchange="leimuchange(this)" id="fatherleibie">
+                                                                        onchange="changestate()"
+                                                                        id="orderstate">
                                                                     <option>
                                                                         请选择
                                                                     </option>
                                                                 </select>
                                                             </div>
-                                                            <div class="col-md-3">
-                                                                <select class="form-control" id="chirdleibie">
-                                                                    <option>
-                                                                        请选择
-                                                                    </option>
-                                                                </select></div>
                                                         </div>
                                                     </product-display-category>
                                                 </div>
@@ -132,29 +133,17 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label class="col-md-3 control-label">所在仓库:</label>
+                                                <label class="col-md-3 control-label">单据金额：</label>
                                                 <div class="col-md-9">
-                                                    <ejp-jiupi-city-select jiupi-city-vo="cityVo"
-                                                                           hide-please-select="false"
-                                                                           change-jiupi-province=""
-                                                                           change-jiupi-city="" is-disabled="false"
-                                                                           class="ng-isolate-scope">
-                                                        <div class="row">
-                                                            <div class="col-md-6"><select
-                                                                    class="form-control" id="productwarehouse">
-                                                                <option value="" ng-hide="hidePleaseSelect" class="">
-                                                                    请选择
-                                                                </option>
-                                                                <option value="店内" label="店内">店内</option>
-                                                                <option value="仓库" label="仓库">仓库</option>
-                                                            </select></div>
-                                                            <div class="col-md-6">
-                                                            </div>
-                                                        </div>
-                                                    </ejp-jiupi-city-select>
+                                                    <div class="input-group input-daterange">
+                                                        <input class="form-control" type="number"
+                                                               id="beginmoney" disabled="disabled"> <span
+                                                            class="input-group-addon">到</span>
+                                                        <input class="form-control " type="number" id="endmoney"
+                                                               disabled="disabled">
+                                                    </div>
                                                 </div>
                                             </div>
-
                                         </div>
                                     </div>
 
@@ -164,10 +153,10 @@
                                     <div class="row">
                                         <div class="col-md-7 col-md-offset-5">
                                             <button type="button" class="btn btn-primary"
-                                                    onclick="searchClick()"> 查询
+                                                    onclick="searchClickOrder()"> 查询
                                             </button>
                                             <button type="button" class="btn btn-default"
-                                                    onclick="resetClick()">清空
+                                                    onclick="resetClickOrder()">清空
                                             </button>
                                         </div>
                                     </div>
@@ -179,7 +168,7 @@
                                     <thead>
                                     <tr class="heading">
                                         <th>序号</th>
-                                        <th>类别</th>
+                                        <th>订单编号</th>
                                         <th>产品名称</th>
                                         <th>所剩库存</th>
                                         <th>所在仓库</th>
@@ -205,115 +194,62 @@
     </div>
 
 </div>
-<script type="text/javascript" src="../../js/sousuo.js"></script>
 <script type="text/javascript">
-
-    function getId(id) {
-        $('#modelHid').val(id);
-        $('#myModal1').modal();
+    var data = ['请选择', '待确认', '待出库 ', '已出库', '已完成'];
+    function bodyonloadOrder(obj) {
+        var str = "";
+        for (var i = 0; i < data.length; i++) {
+            str += "<option>" + data[i] + "</option> ";
+        }
+        $("#orderstate").html(str);
+        searchClickOrder(1, 1);
     }
-
-    function onchangeProduct(thisobj) {
-        var id = $('#modelHid').val();
-        var recordCount = $('#recordCount').val();
-        var remork = $('#remork').val();
-        if (recordCount == null || recordCount == undefined || recordCount == "") {
-            $("#recordTishi").html("请填写变更数量");
-            return;
+    function changestate() {
+        if ($("#orderstate").val() == "已完成") {
+            $("#beginmoney").attr("disabled", false); //设置变灰按钮
+            $("#endmoney").attr("disabled", false); //设置变灰按钮
+        } else {
+            $("#beginmoney").val("");
+            $("#endmoney").val("");
+            $("#beginmoney").attr("disabled", true); //设置变灰按钮
+            $("#endmoney").attr("disabled", true); //设置变灰按钮
         }
-        $("#recordTishi").html("");
-        if (!/^(0|[1-9][0-9]*|-[1-9][0-9]*)$/.test(recordCount)) {
-            $("#recordTishi").html("请变更数量需要为整数");
-            return;
+    }
+    function searchClickOrder(pageNum, pages) {
+        var noteno = $("#noteno").val();
+        var beginTime = $("#beginTime").val();
+        var endTime = $("#endTime").val();
+        var orderstate = $("#orderstate").val();
+        var beginmoney = $("#beginmoney").val();
+        var endmoney = $("#endmoney").val();
+    }
+    function resetClickOrder() {
+        $("#noteno").val("");
+        $("#beginTime").val("");
+        $("#endTime").val("");
+        var str = "";
+        for (var i = 0; i < data.length; i++) {
+            str += "<option>" + data[i] + "</option> ";
         }
-        $("#recordTishi").html("");
-        if (remork == null | remork == undefined || remork == "") {
-            $("#recordTishi").html("请填写原因");
-            return;
-        }
-        $("#recordTishi").html("");
-        $(thisobj).attr("disabled", true); //设置变灰按钮
-        $.ajax({
-            type: "POST",      //传输方式
-            url: "../../insertRecord", //地址
-            data: {            //传递的参数
-                "productId": id,
-                "recordCount": recordCount,
-                "remark": remork
-            },
-            success: function (obj) {
-                $(thisobj).attr("disabled", false); //设置变灰按钮
-                $("#myModal1").modal('hide');
-                searchClick($("#dangqianpage").html(), $("#dangqianpage").html());
-            },
-            error: function (data, type, err) {
-                $(thisobj).attr("disabled", false); //设置变灰按钮
-                $("#modelMsg").html(+data.responseJSON.status + ":" + data.responseJSON.message);
-                $('#myModal').modal();
-            }
-        })
-        ;
+        $("#orderstate").html(str);
+        $("#beginmoney").val("");
+        $("#endmoney").val("");
     }
 </script>
-
-//变更库存模态框
-<div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                        aria-hidden="true">&times;</span>
-                </button>
-                <h4 class="modal-title" id="myModalLabel1">库存变更</h4>
-            </div>
-            <div class="modal-body" id="modelMsg1">
-                <div class="form-group" style="height: 80px">
-                    <input type="hidden" value="" id="modelHid">
-                    <div class="col-md-2"></div>
-                    <div class="col-md-9">
-                        <table>
-                            <tr style="height: 35px">
-                                <td>变更数量：</td>
-                                <td><input type="number" class="form-control" id="recordCount" style="height: 25px">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>变更原因：</td>
-                                <td><input type="type" class="form-control" id="remork" style="height: 25px">
-                                </td>
-                            </tr>
-                        </table>
-                        <div style="color: red;margin-top: 5px">*正数增加，负数减少,所有操作都会被记录*</div>
-                        <div style="color: red;margin-top: 5px" id="recordTishi"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" onclick="onchangeProduct(this)">确认</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-            </div>
-        </div>
-    </div>
-</div>
-//错误提示模态
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                        aria-hidden="true">&times;</span>
-                </button>
-                <h4 class="modal-title" id="myModalLabel">错误提示!</h4>
-            </div>
-            <div class="modal-body" id="modelMsg" style="color: red">
-
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
-            </div>
-        </div>
-    </div>
-</div>
+<!--时间插件-->
+<script>window.jQuery || document.write('<script src="../../js/jquery.min.js"><\/script>')</script>
+<script src="../../js/bootstrap.min.css"></script>
+<script src="../../js/bootstrap.min.js"></script>
+<script src="../../js/jquery.min.js"></script>
+<script src="../../js/bootstrap.min.js"></script>
+<script src="../../js/bootstrap-datepicker.min.js"></script>
+<script src="../../js/bootstrap-datepicker.zh-CN.min.js" charset="UTF-8"></script>
+<script type="text/javascript">
+    $(function () {
+        $('.datepicker').datepicker({
+            language: 'zh-CN'
+        });
+    })
+</script>
 </body>
 </html>
