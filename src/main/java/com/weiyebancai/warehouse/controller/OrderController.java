@@ -1,18 +1,23 @@
 package com.weiyebancai.warehouse.controller;
 
 import com.weiyebancai.warehouse.pagemodel.BaseResult;
+import com.weiyebancai.warehouse.pagemodel.DataResult;
+import com.weiyebancai.warehouse.pojo.OrderPO;
+import com.weiyebancai.warehouse.pojo.SelectOrderDTO;
 import com.weiyebancai.warehouse.service.OrderServer;
 import com.weiyebancai.warehouse.utile.GetObjectUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 /**
  * 出库单控制层
@@ -39,5 +44,11 @@ public class OrderController {
         String username = GetObjectUtil.getUserName(session);
         orderServer.createOrder(remork, username);
         return new BaseResult();
+    }
+
+    @RequestMapping(value = "/selectOrder", method = RequestMethod.POST)
+    public BaseResult selectOrder(@RequestBody SelectOrderDTO selectOrderDTO) {
+        DataResult<List<OrderPO>> orderPOList = orderServer.selectOrder(selectOrderDTO);
+        return orderPOList;
     }
 }

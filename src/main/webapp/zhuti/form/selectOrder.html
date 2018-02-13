@@ -153,7 +153,7 @@
                                     <div class="row">
                                         <div class="col-md-7 col-md-offset-5">
                                             <button type="button" class="btn btn-primary"
-                                                    onclick="searchClickOrder()"> 查询
+                                                    onclick="searchClickOrder(1,1)"> 查询
                                             </button>
                                             <button type="button" class="btn btn-default"
                                                     onclick="resetClickOrder()">清空
@@ -169,19 +169,15 @@
                                     <tr class="heading">
                                         <th>序号</th>
                                         <th>订单编号</th>
-                                        <th>产品名称</th>
-                                        <th>所剩库存</th>
-                                        <th>所在仓库</th>
-                                        <th>品牌</th>
-                                        <!-- <th>负责人</th>-->
+                                        <th>订单状态</th>
+                                        <th>订单备注</th>
+                                        <th>订单创建人</th>
+                                        <th>订单创建时间</th>
                                         <th>操作</th>
                                     </tr>
                                     </thead>
-                                    <tbody id="selectBody">
-                                    <tr data-ng-repeat="item in vm.items" class="odd gradeX ng-scope">
+                                    <tbody id="selectOrderBody">
 
-
-                                    </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -217,11 +213,60 @@
     }
     function searchClickOrder(pageNum, pages) {
         var noteno = $("#noteno").val();
-        var beginTime = $("#beginTime").val();
-        var endTime = $("#endTime").val();
+        var beginTime = formatTime($("#beginTime").val(), 1);
+        var endTime = formatTime($("#endTime").val(), 2);
         var orderstate = $("#orderstate").val();
         var beginmoney = $("#beginmoney").val();
         var endmoney = $("#endmoney").val();
+        if (orderstate == "请选择") {
+            orderstate = null;
+        }
+        if (pageNum <= 0 || pageNum > pages) {
+            return;
+        }
+        $.ajax({
+            type: "POST",      //传输方式
+            url: "../../selectOrder",
+            dataType: 'json',
+            contentType: 'application/json',
+            data: JSON.stringify({            //传递的参数
+                "noteno": noteno,
+                "beginTime": beginTime,
+                "endTime": endTime,
+                "orderState": orderstate,
+                "beginMoney": beginmoney,
+                "endMoney": endmoney,
+                "page": {
+                    "pageNum": pageNum,
+                    "pageSize": 20,
+                    "orderBy": "asc"
+                }
+            }),
+            success: function (obj) {
+                if (obj.success == true) {
+                    var str = "";
+                    for (var i = 0; i < obj.data.length; i++) {
+                        var data = obj.data[i];
+                        var stateString = getStateColor(data.state);
+                        str += "<tr class='odd gradeX ng-scope' >\n" +
+                            " <td class='ng-binding'>" + (i + 1 + (obj.page.pageNum - 1) * obj.page.pageSize) + "</td>\n" +
+                            " <td class='ng-binding'>" + data.noteno + "</td>" +
+                            " <td>" + stateString + "</td>\n" +
+                            "<td>" + data.remork + "</td>" +
+                            "<td>" + data.createUser + "</td>" +
+                            "<td >" + formationDate(new Date(data.createTime)) + "</td>" +
+                            "<td ng-bind='item.des' class='ng-binding'>" + "操作" + "</td>" +
+                            "</tr>"
+                    }
+
+                    $("#selectOrderBody").html(str);
+                }
+            },
+            error: function (data, type, err) {
+                $("#modelMsg").html(+data.responseJSON.status + ":" + data.responseJSON.message);
+                $('#myModal').modal();
+            }
+        });
     }
     function resetClickOrder() {
         $("#noteno").val("");
@@ -234,6 +279,47 @@
         $("#orderstate").html(str);
         $("#beginmoney").val("");
         $("#endmoney").val("");
+    }
+    //根据不同的状态获得不同的标签颜色
+    function getStateColor(state) {
+        var str = ""
+        if (state == "待确认") {
+            str = "<span class='label label-sm label-warning'>待确认</span>"
+        }
+        if (state == "待出库") {
+            str = "<span class='label label-sm label-danger'>待出库</span>"
+        }
+        if (state == "已出库") {
+            str = "<span class='label label-sm label-primary'>已出库</span>"
+        }
+        if (state == "已完成") {
+            str = "<span class='label label-sm label-success'>已完成</span>"
+        }
+        return str;
+    }
+    //格式化时间戳
+    function formationDate(datetime) {
+        var month = datetime.getMonth();
+        var day = datetime.getDay();
+        if (month >= 1 && month <= 9) {
+            month = "0" + month;
+        }
+        if (day >= 0 && day <= 9) {
+            day = "0" + day;
+        }
+        return datetime.getFullYear() + "-" + month + "-" + day + "&nbsp;" + datetime.getHours() + ":" + datetime.getMinutes() + ":" + datetime.getSeconds();
+    }
+    //格式化日期
+    function formatTime(obj, i) {
+        if (obj == null) {
+            return null;
+        }
+        if (i == 1) {
+            var str = obj.replace('年', '-').replace('月', '-').replace('日', 'T00:00:00.000+0800');
+            return str;
+        }
+        var str = obj.replace('年', '-').replace('月', '-').replace('日', 'T23:59:59.999+0800');
+        return str;
     }
 </script>
 <!--时间插件-->
@@ -251,5 +337,27 @@
         });
     })
 </script>
+
+
+//错误提示模态
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">错误提示!</h4>
+            </div>
+            <div class="modal-body" id="modelMsg" style="color: red">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>

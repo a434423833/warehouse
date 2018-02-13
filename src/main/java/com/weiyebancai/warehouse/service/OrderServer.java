@@ -1,13 +1,16 @@
 package com.weiyebancai.warehouse.service;
 
 import com.weiyebancai.warehouse.dao.OrderDao;
+import com.weiyebancai.warehouse.pagemodel.DataResult;
 import com.weiyebancai.warehouse.pojo.OrderPO;
+import com.weiyebancai.warehouse.pojo.SelectOrderDTO;
 import com.weiyebancai.warehouse.pojo.enumclass.OutStockEnum;
 import com.weiyebancai.warehouse.utile.UUidUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 出库单server
@@ -17,7 +20,7 @@ import java.util.Date;
 @Service
 public class OrderServer {
     @Autowired
-    private OrderDao outStockDao;
+    private OrderDao orderDao;
 
     /**
      * 生成订单
@@ -32,6 +35,15 @@ public class OrderServer {
         orderPO.setCreateUser(username);
         orderPO.setRemork(remork);
         orderPO.setState(OutStockEnum.ONE);
-        outStockDao.insertOrder(orderPO);
+        orderDao.insertOrder(orderPO);
+    }
+
+    /**
+     * 查询订单
+     *
+     * @param selectOrderDTO
+     */
+    public DataResult<List<OrderPO>> selectOrder(SelectOrderDTO selectOrderDTO) {
+        return orderDao.selectOrder(selectOrderDTO);
     }
 }
