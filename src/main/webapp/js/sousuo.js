@@ -68,12 +68,14 @@ function searchClick(pageNum, pages) {
                     str += "<tr  class='odd gradeX ng-scope'>" +
                         "<td class='ng-binding'>" + (i + 1 + (obj.page.pageNum - 1) * obj.page.pageSize) + "</td>" +
                         "<td  class='ng-binding'>" + obj.data[i].productCategory + "</td>" +
-                        "<td  class='ng-binding'>" + obj.data[i].productName + "</td>" +
+                        "<td  class='ng-binding' id='productId" + obj.data[i].id + "'>" + obj.data[i].productName + "</td>" +
                         "<td class='ng-binding'>" + obj.data[i].productCount + "</td>" +
-                        "<td  class='ng-binding'>" + obj.data[i].productWarehouse + "</td>" +
+                        "<td class='ng-binding'>" + obj.data[i].productWarehouse + "</td>" +
                         "<td class='ng-binding'>" + obj.data[i].productBrand + " </td>" +
-                        "<td class='ng-binding'> <a class='btn btn-info btn-xs' href='../main/selectrocord.html?id=" + obj.data[i].id + "'> 库存变更明细</a >&nbsp;&nbsp;&nbsp; " +
-                        "<button  class='btn btn-primary btn-xs' onclick='getId(&apos;" + obj.data[i].id + "&apos;)'>变更库存</a></td></tr>";
+                        "<td class='ng-binding'>" +
+                        "<a class='btn btn-info btn-xs' href='../main/selectrocord.html?id=" + obj.data[i].id + "'> 库存变更明细</a >&nbsp;&nbsp;&nbsp; " +
+                        "<a class='btn btn-primary btn-xs' onclick='getId(&apos;" + obj.data[i].id + "&apos;)'>变更库存</a>&nbsp;&nbsp;&nbsp;" +
+                        "<a class='btn btn-danger btn-xs' onclick='getIdForDel(&apos;" + obj.data[i].id + "&apos;)'>删除</a></td></tr>";
                 }
                 $("#selectBody").html(str);
                 if (str == "") {
@@ -104,5 +106,33 @@ function resetClick() {
     $("#chirdleibie").html("<option value='请选择' label='请选择'>请选择</option>");
     $("#productwarehouse").html("<option>请选择</option><option>店内</option><option>仓库</option>");
     $("#productbrand").val("");
+}
 
+var delectId;
+
+function getIdForDel(id) {
+    delectId = id;
+    $("#modelMsg2").html("是否删除<span style='color: red'>" + $("#productId" + delectId).html() + "</span>该商品库存");
+    $("#myModal2").modal();
+}
+
+function ondelectproduct(thisobj) {
+    $(thisobj).attr("disabled", true); //设置变灰按钮
+    $.ajax({
+        type: "POST",      //传输方式
+        url: "../../delectProduct", //地址
+        data: {            //传递的参数
+            "productId": delectId
+        },
+        success: function (obj) {
+            $(thisobj).attr("disabled", false);
+            $("#myModal2").modal('hide');
+            searchClick($("#dangqianpage").html(), $("#dangqianpage").html());
+        },
+        error: function (data, type, err) {
+            $(thisobj).attr("disabled", false); //设置变灰按钮
+            $("#modelMsg").html(+data.responseJSON.status + ":" + data.responseJSON.message);
+            $('#myModal').modal();
+        }
+    });
 }

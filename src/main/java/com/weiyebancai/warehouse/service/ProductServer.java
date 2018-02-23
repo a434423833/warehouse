@@ -35,6 +35,7 @@ public class ProductServer {
      *
      * @param productDTO
      */
+    @Transactional
     public void insertProduct(ProductDTO productDTO, UserVO userVO) {
         ProductPO productPO = new ProductPO();
         BeanUtils.copyProperties(productDTO, productPO);
@@ -87,6 +88,7 @@ public class ProductServer {
      * @param recordCount
      * @param remark
      */
+    @Transactional
     public void insertRecord(String productId, Integer recordCount, String remark, String username) {
         ProductPO productPO = productDao.findOneProduct(productId);
         if (recordCount < 0 && productPO.getProductCount() + recordCount < 0 ? true : false) {
@@ -104,5 +106,16 @@ public class ProductServer {
         productDao.insertRecord(po);
         productPO.setProductCount(productPO.getProductCount() + recordCount);
         productDao.updateProduct(productPO);
+    }
+
+    /**
+     * 删除商品
+     *
+     * @param productId
+     */
+    @Transactional
+    public void delectProduct(String productId) {
+        productDao.delectProduct(productId);
+        productDao.delectRecord(productId);
     }
 }

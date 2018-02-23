@@ -147,4 +147,22 @@ public class ProductDao {
         update.set("updateTime", productPO.getUpdateTime());
         mongoTemplate.updateFirst(new Query(Criteria.where("id").is(productPO.getId())), update, ProductPO.class);
     }
+
+    /**
+     * 删除商品
+     *
+     * @param productId
+     */
+    public void delectProduct(String productId) {
+        mongoTemplate.remove(new Query(Criteria.where("id").is(productId)), ProductPO.class);
+    }
+
+    /**
+     * 删除变更记录
+     *
+     * @param productId
+     */
+    public void delectRecord(String productId) {
+        mongoTemplate.remove(new Query(Criteria.where("productId").is(productId)), RecordPO.class);
+    }
 }

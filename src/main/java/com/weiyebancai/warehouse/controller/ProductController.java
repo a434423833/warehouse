@@ -103,4 +103,16 @@ public class ProductController {
         return new BaseResult();
     }
 
+    /**
+     * 删除商品
+     * @param productId
+     * @return
+     */
+    @RequestMapping(value = "/delectProduct", method = RequestMethod.POST)
+    public BaseResult delectProduct(String productId) {
+        Assert.notNull(productId, "productId为null");
+        productServer.delectProduct(productId);
+        return new BaseResult();
+    }
+
 }
