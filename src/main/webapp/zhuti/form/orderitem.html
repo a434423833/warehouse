@@ -2,7 +2,7 @@
 <html lang="zh-cn"><!--<![endif]--><!-- BEGIN HEAD -->
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>伟业变更记录后台</title>
+    <title>订单详情查看</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta content="width=device-width, initial-scale=1" name="viewport">
 
@@ -59,7 +59,7 @@
     <div class="page-content" id="dataLoading" style="min-height:813px">
         <div class="fade-in-up ng-scope">
             <div data-page-top="">
-                <h3 class="page-title ng-binding" data-ng-bind="$state.current.data.pageTitle">仓库库存变更明细</h3>
+                <h3 class="page-title ng-binding" data-ng-bind="$state.current.data.pageTitle">订单详情明细</h3>
             </div>
             <div class="row ng-scope">
                 <div class="col-md-12">
@@ -70,24 +70,44 @@
                                 <div class="row">
                                     <div class="col-md-5">
                                         <div class="form-group">
-                                            <label class="control-label col-md-3">产品名称:</label>
+                                            <label class="control-label col-md-3">订单单号</label>
                                             <div class="col-md-9">
-                                                <p class="form-control-static " id="productName">
+                                                <p class="form-control-static " id="orderNoteno">
                                                 </p>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-md-5">
                                         <div class="form-group">
-                                            <label class="control-label col-md-3">所属仓库:</label>
+                                            <label class="control-label col-md-3">订单备注:</label>
                                             <div class="col-md-9">
-                                                <p class="form-control-static " id="productWarehouse">
+                                                <p class="form-control-static " id="orderRemork">
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3">订单状态</label>
+                                            <div class="col-md-9">
+                                                <p class="form-control-static " id="orderState">
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3">最后修改时间:</label>
+                                            <div class="col-md-9">
+                                                <p class="form-control-static " id="updateTime">
                                                 </p>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-md-2" style="margin-top: 15px">
-                                        <a href="../main/selectproduct.html" style="font-size: 20px">点击返回</a>
+                                        <a href="selectOrder.html" style="font-size: 20px">点击返回</a>
                                     </div>
                                 </div>
                             </form>
@@ -107,13 +127,11 @@
                                                             <thead>
                                                             <tr class="heading">
                                                                 <th>序号</th>
-                                                                <th>操作事件</th>
-                                                                <th>原库存数</th>
-                                                                <th>变更数量</th>
-                                                                <th>新库存数</th>
-                                                                <th>时间</th>
-                                                                <th>操作人</th>
-                                                                <th>描述</th>
+                                                                <th>商品名称</th>
+                                                                <th id="conutupdate">数量</th>
+                                                                <th>所在仓库</th>
+                                                                <th>产品类别</th>
+                                                                <th>操作</th>
                                                             </tr>
                                                             </thead>
                                                             <tbody id="selectBody">
@@ -122,8 +140,7 @@
                                                         </table>
                                                     </div>
 
-                                                    <h5 class="ng-binding" id="pageBody">每页 20条 | 共 23 条记录
-                                                        | 当前第 1 页 | 共 2 页</h5>
+                                                    <h5 class="ng-binding" id="pageBody">共0个商品</h5>
 
                                                 </div>
                                             </div>
@@ -140,53 +157,68 @@
     </div>
 </div>
 </body>
+<script src="tongyong.js"></script>
 <script type="text/javascript">
+    var objOrder = JSON.parse(sessionStorage.getItem("item"));
     function bodyonload() {
-        var url = location.search;
-        var id = url.substring(4, url.length);
-        selectRecord(id, 1, 1);
+        $("#orderNoteno").html(objOrder.noteno);
+        $("#orderRemork").html(objOrder.remork);
+        $("#updateTime").html(formationDate(objOrder.updateTime));
+        $("#orderState").html(getStateColor(objOrder.state));
+        if (objOrder.state == "待确认") {
+            $("#conutupdate").html("数量&nbsp;&nbsp;" + "<button  class='label label-sm label-primary' onclick='updatestate()'>点击修改</button>");
+        }
+        showproduct(0);
+    }
+    //显示产品 0不可编辑，1编辑状态
+    function showproduct(update) {
+        var str = "";
+        for (var i = 0; i < objOrder.productList.length; i++) {
+            var data = objOrder.productList[i];
+            str += "<tr class='odd gradeX ng-scope' >\n" +
+                " <td class='ng-binding'>" + i + 1 + "</td>\n" +
+                " <td class='ng-binding'>" + data.productName + "</td>"
+            ;
+            if (objOrder.state == "待确认" && update == 1) {
+                str += "<td><input type='number' value='" + data.productCount + "' id='productCount" + i + "''</td>\n";
+            } else {
+                str += " <td>" + data.productCount + "</td>\n";
+            }
+            str += "<td>" + data.productWarehouse + "</td>" +
+                "<td>" + data.productCategory + "</td>" +
+                "<td ng-bind='item.des' class='ng-binding'>" +
+                "<button class='btn btn-info btn-xs' onclick=selectOrderItem(" + i + ")> 查看订单详细</button> " +
+                "</td></tr>"
+        }
+        $("#selectBody").html(str);
+        if (objOrder != null) {
+            $("#pageBody").html(" 共 " + objOrder.productList.length + "个商品");
+        }
     }
 
-    function selectRecord(id, pageNum, pages) {
+    function updatestate() {
+        $("#conutupdate").html("数量&nbsp;&nbsp;" + "<button class='label label-sm label-success' onclick='updatesave()'>保存修改</button>");
+        showproduct(1);
+    }
+    function updatesave() {
+        $("#conutupdate").html("数量&nbsp;&nbsp;" + "<button class='label label-sm label-primary' onclick='updatestate()'>点击修改</button>");
+        var objnew = deepClone(objOrder);
+        for (var i = 0; i < objOrder.productList.length; i++) {
+            objnew.productList[i].productCount = $("#productCount" + i).val();
+        }
+        updateOrder(objnew);
+        showproduct(0);
+    }
+    function updateOrder(objnew) {
         $.ajax({
             type: "POST",      //传输方式
-            url: "../../selectRecord", //地址
+            url: "../../updateOrder", //地址
             dataType: 'json',
             contentType: 'application/json',
-            data: JSON.stringify({            //传递的参数
-                "productId": id,
-                "page": {
-                    "pageNum": pageNum,
-                    "pageSize": 20,
-                    "orderBy": "asc"
-                }
-            }),
+            data: JSON.stringify(objnew),
+            async: false,
             success: function (obj) {
-                if (obj.success == true) {
-                    var str = "";
-                    for (var i = 0; i < obj.data.list.length; i++) {
-                        var data = obj.data.list[i];
-                        str += "<tr class='odd gradeX ng-scope'\n" +
-                            " ng-repeat='item in vm.items'>\n" +
-                            " <td class='ng-binding'>" + (i + 1 + (obj.page.pageNum - 1) * obj.page.pageSize) + "</td>\n" +
-                            " <td ng-bind='item.orderNo' class='ng-binding'>" + data.incident + "</td>" +
-                            " <td><span class='label label-sm label-primary ng-binding'>" + data.beginCount + "</span></td>\n" +
-                            "<td> <span class='label label-sm label-success ng-binding ng-scope'>" + data.recordCount + "</span></td>" +
-                            "<td><span class='label label-sm label-primary ng-binding'>" + data.endCount + "</span></td>\n" +
-                            "<td >" + formationDate(new Date(data.time)) + "</td>" +
-                            " <td ng-bind='item.createUser' class='ng-binding'>" + data.userName + "</td>\n" +
-                            "<td ng-bind='item.des' class='ng-binding'>" + data.remark + "</td>" +
-                            "</tr>"
-                    }
-                    $("#productName").html(obj.data.productName);
-                    $("#productWarehouse").html(obj.data.productWarehouse);
-                    $("#selectBody").html(str);
-                    $("#pageBody").html("每页 " + obj.page.pageSize + "条 | 共 " + obj.page.total + "条记录 | 当前第<span id='dangqianpage'> " + obj.page.pageNum + " </span>页 | 共 " + obj.page.pages + " 页" +
-                        "| <a onclick='selectRecord(&apos;" + obj.data.list[0].productId + "&apos;," + (obj.page.pageNum - 1) + "," + obj.page.pages + ")'> 上一页 </a>" +
-                        "| <a onclick='selectRecord(&apos;" + obj.data.list[0].productId + "&apos;," + (obj.page.pageNum + 1) + "," + obj.page.pages + ")'> 下一页 </a>" +
-                        "| <a onclick='selectRecord(&apos;" + obj.data.list[0].productId + "&apos;," + 1 + "," + 1 + ")'> 首页 </a>" +
-                        "| <a onclick='selectRecord(&apos;" + obj.data.list[0].productId + "&apos;," + obj.page.pages + "," + obj.page.pages + ")'>尾页 </a>");
-                }
+                objOrder = deepClone(objnew);//成功刷新objOrder
             },
             error: function (data, type, err) {
                 $("#modelMsg").html(+data.responseJSON.status + ":" + data.responseJSON.message);
@@ -194,17 +226,48 @@
             }
         });
     }
-
-    function formationDate(datetime) {
-        var month = datetime.getMonth() + 1;
-        var day = datetime.getDate();
-        if (month >= 1 && month <= 9) {
-            month = "0" + month;
+    //深拷贝
+    function deepClone(data) {
+        var type = getType(data);
+        var obj;
+        if (type === 'array') {
+            obj = [];
+        } else if (type === 'object') {
+            obj = {};
+        } else {
+            //不再具有下一层次
+            return data;
         }
-        if (day >= 0 && day <= 9) {
-            day = "0" + day;
+        if (type === 'array') {
+            for (var i = 0, len = data.length; i < len; i++) {
+                obj.push(deepClone(data[i]));
+            }
+        } else if (type === 'object') {
+            for (var key in data) {
+                obj[key] = deepClone(data[key]);
+            }
         }
-        return datetime.getFullYear() + "-" + month + "-" + day + "&nbsp;" + datetime.getHours() + ":" + datetime.getMinutes() + ":" + datetime.getSeconds();
+        return obj;
+    }
+    function getType(obj) {
+        //tostring会返回对应不同的标签的构造函数
+        var toString = Object.prototype.toString;
+        var map = {
+            '[object Boolean]': 'boolean',
+            '[object Number]': 'number',
+            '[object String]': 'string',
+            '[object Function]': 'function',
+            '[object Array]': 'array',
+            '[object Date]': 'date',
+            '[object RegExp]': 'regExp',
+            '[object Undefined]': 'undefined',
+            '[object Null]': 'null',
+            '[object Object]': 'object'
+        };
+        if (obj instanceof Element) {
+            return 'element';
+        }
+        return map[toString.call(obj)];
     }
 </script>
 

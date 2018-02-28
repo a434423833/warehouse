@@ -40,6 +40,7 @@
     <script src="../../js/bootstrap.min.js"></script>
     <script src="../../js/bootstrap.min.css "></script>
     <link rel="stylesheet" type="text/css" href="../../css/loader.css">
+    <script src="createOrder.js"></script>
     <script type="text/javascript">
         // 等待所有加载
         $(window).load(function () {
@@ -68,6 +69,11 @@
                     <button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal1"
                             onclick="searchClick()"> 生成订单
                     </button>
+                    <select class="form-control" id="selectorder" style="width: 500px;margin-top: 20px">
+                        <option>
+                            请选择订单
+                        </option>
+                    </select>
                 </h3>
             </div>
             <div class="row" data-page-content="">
@@ -170,10 +176,10 @@
                                     <div class="row">
                                         <div class="col-md-7 col-md-offset-5">
                                             <button type="button" class="btn btn-primary"
-                                                    onclick="searchClickOrder()"> 查询
+                                                    onclick="searchClick()"> 查询
                                             </button>
                                             <button type="button" class="btn btn-default"
-                                                    onclick="resetClickOrder()">清空
+                                                    onclick="resetClick()">清空
                                             </button>
                                         </div>
                                     </div>
@@ -210,38 +216,8 @@
     </div>
 
 </div>
-<script type="text/javascript" src="../../js/sousuo.js"></script>
 <script type="text/javascript">
-    function onCreateOrder(thisobj) {
-        var remork = $("#createremork").val();
-        if (remork == null || remork == undefined || remork.length <= 0) {
-            $("#createOutStockTishi").html("请填写备注");
-            return;
-        }
-        $(thisobj).attr("disabled", "disabled"); //设置变灰按钮
-        $.ajax({
-            type: "GET",      //传输方式
-            url: "../../createOrder", //地址
-            dataType: 'json',
-            contentType: 'application/json',
-            data: {            //传递的参数
-                "remork": remork
-            },
-            success: function (obj) {
-                $(thisobj).attr("disabled", false);
-                $("#myModal1").modal('hide');
-            },
-            error: function (data, type, err) {
-                $("#modelMsg").html(+data.responseJSON.status + ":" + data.responseJSON.message);
-                $(thisobj).attr("disabled", false);
-                $('#myModal').modal();
-            }
-        });
-    }
-    function getId(id) {
-        $('#modelHid').val(id);
-        $('#myModal1').modal();
-    }
+
 </script>
 
 //生成出库单模态框
@@ -293,6 +269,49 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                 <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+//商品选择模态框
+<div class="modal fade" id="myModal3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel3">选择商品数量</h4>
+            </div>
+            <div class="modal-body" id="modelMsg3">
+                <div class="form-group" style="height: 90px">
+                    <div class="col-md-2"></div>
+                    <table class="col-md-8">
+                        <tr style="height: 30px">
+                            <td>商品名称:</td>
+                            <td id="msg3Name"></td>
+                        </tr>
+                        <tr style="height: 30px">
+                            <td>商品数量:</td>
+                            <td><input type="number" class="form-control" id="msg3count" style="height: 20px"></td>
+                        </tr>
+                        <tr style="height: 30px">
+                            <td>所属订单:</td>
+                            <td id="msg3order"></td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-md-2"></div>
+                    <div class="form-group" class="col-md-8" style="margin-top: 0px">
+                        <span id="msg3" style="color: red"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="mag3addProduct" onclick="mag3addProduct(this)">添加
+                </button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
             </div>
         </div>
     </div>

@@ -43,7 +43,7 @@ public class ProductPO implements Serializable {
      */
     private Double productBid;
     /**
-     * 产品定价
+     * 产品修改时间
      */
     private Date updateTime;
 

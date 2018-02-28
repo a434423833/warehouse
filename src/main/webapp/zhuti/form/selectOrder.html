@@ -83,7 +83,7 @@
                                     <div class="row ng-scope">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label class="col-md-3 control-label">订单号：</label>
+                                                <label class="col-md-3 control-label">订单备注：</label>
                                                 <div class="col-md-9">
                                                     <input type="text" name="product_name"
                                                            class="form-control "
@@ -159,6 +159,7 @@
                                                     onclick="resetClickOrder()">清空
                                             </button>
                                         </div>
+                                        <div style="color: red;margin-left:80%">*订单出库后无法删除</div>
                                     </div>
                                 </div>
                             </form>
@@ -181,7 +182,7 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <h5 class="ng-binding ng-scope" id="fanye"></h5>
+                            <h5 class="ng-binding ng-scope" id="fenye">当前页</h5>
                         </div>
                     </div>
                 </div>
@@ -190,138 +191,8 @@
     </div>
 
 </div>
-<script type="text/javascript">
-    var data = ['请选择', '待确认', '待出库 ', '已出库', '已完成'];
-    function bodyonloadOrder(obj) {
-        var str = "";
-        for (var i = 0; i < data.length; i++) {
-            str += "<option>" + data[i] + "</option> ";
-        }
-        $("#orderstate").html(str);
-        searchClickOrder(1, 1);
-    }
-    function changestate() {
-        if ($("#orderstate").val() == "已完成") {
-            $("#beginmoney").attr("disabled", false); //设置变灰按钮
-            $("#endmoney").attr("disabled", false); //设置变灰按钮
-        } else {
-            $("#beginmoney").val("");
-            $("#endmoney").val("");
-            $("#beginmoney").attr("disabled", true); //设置变灰按钮
-            $("#endmoney").attr("disabled", true); //设置变灰按钮
-        }
-    }
-    function searchClickOrder(pageNum, pages) {
-        var noteno = $("#noteno").val();
-        var beginTime = formatTime($("#beginTime").val(), 1);
-        var endTime = formatTime($("#endTime").val(), 2);
-        var orderstate = $("#orderstate").val();
-        var beginmoney = $("#beginmoney").val();
-        var endmoney = $("#endmoney").val();
-        if (orderstate == "请选择") {
-            orderstate = null;
-        }
-        if (pageNum <= 0 || pageNum > pages) {
-            return;
-        }
-        $.ajax({
-            type: "POST",      //传输方式
-            url: "../../selectOrder",
-            dataType: 'json',
-            contentType: 'application/json',
-            data: JSON.stringify({            //传递的参数
-                "noteno": noteno,
-                "beginTime": beginTime,
-                "endTime": endTime,
-                "orderState": orderstate,
-                "beginMoney": beginmoney,
-                "endMoney": endmoney,
-                "page": {
-                    "pageNum": pageNum,
-                    "pageSize": 20,
-                    "orderBy": "asc"
-                }
-            }),
-            success: function (obj) {
-                if (obj.success == true) {
-                    var str = "";
-                    for (var i = 0; i < obj.data.length; i++) {
-                        var data = obj.data[i];
-                        var stateString = getStateColor(data.state);
-                        str += "<tr class='odd gradeX ng-scope' >\n" +
-                            " <td class='ng-binding'>" + (i + 1 + (obj.page.pageNum - 1) * obj.page.pageSize) + "</td>\n" +
-                            " <td class='ng-binding'>" + data.noteno + "</td>" +
-                            " <td>" + stateString + "</td>\n" +
-                            "<td>" + data.remork + "</td>" +
-                            "<td>" + data.createUser + "</td>" +
-                            "<td >" + formationDate(new Date(data.createTime)) + "</td>" +
-                            "<td ng-bind='item.des' class='ng-binding'>" + "操作" + "</td>" +
-                            "</tr>"
-                    }
-
-                    $("#selectOrderBody").html(str);
-                }
-            },
-            error: function (data, type, err) {
-                $("#modelMsg").html(+data.responseJSON.status + ":" + data.responseJSON.message);
-                $('#myModal').modal();
-            }
-        });
-    }
-    function resetClickOrder() {
-        $("#noteno").val("");
-        $("#beginTime").val("");
-        $("#endTime").val("");
-        var str = "";
-        for (var i = 0; i < data.length; i++) {
-            str += "<option>" + data[i] + "</option> ";
-        }
-        $("#orderstate").html(str);
-        $("#beginmoney").val("");
-        $("#endmoney").val("");
-    }
-    //根据不同的状态获得不同的标签颜色
-    function getStateColor(state) {
-        var str = ""
-        if (state == "待确认") {
-            str = "<span class='label label-sm label-warning'>待确认</span>"
-        }
-        if (state == "待出库") {
-            str = "<span class='label label-sm label-danger'>待出库</span>"
-        }
-        if (state == "已出库") {
-            str = "<span class='label label-sm label-primary'>已出库</span>"
-        }
-        if (state == "已完成") {
-            str = "<span class='label label-sm label-success'>已完成</span>"
-        }
-        return str;
-    }
-    //格式化时间戳
-    function formationDate(datetime) {
-        var month = datetime.getMonth();
-        var day = datetime.getDay();
-        if (month >= 1 && month <= 9) {
-            month = "0" + month;
-        }
-        if (day >= 0 && day <= 9) {
-            day = "0" + day;
-        }
-        return datetime.getFullYear() + "-" + month + "-" + day + "&nbsp;" + datetime.getHours() + ":" + datetime.getMinutes() + ":" + datetime.getSeconds();
-    }
-    //格式化日期
-    function formatTime(obj, i) {
-        if (obj == null) {
-            return null;
-        }
-        if (i == 1) {
-            var str = obj.replace('年', '-').replace('月', '-').replace('日', 'T00:00:00.000+0800');
-            return str;
-        }
-        var str = obj.replace('年', '-').replace('月', '-').replace('日', 'T23:59:59.999+0800');
-        return str;
-    }
-</script>
+<script src="tongyong.js"></script>
+<script src="selectOrder.js"></script>
 <!--时间插件-->
 <script>window.jQuery || document.write('<script src="../../js/jquery.min.js"><\/script>')</script>
 <script src="../../js/bootstrap.min.css"></script>
@@ -358,6 +229,30 @@
             </div>
         </div>
     </div>
+</div>
+//删除模态框
+<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel2">删除订单</h4>
+            </div>
 
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-6 modal-body" id="modelMsg2">
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="ondelectorder(this)">确认</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

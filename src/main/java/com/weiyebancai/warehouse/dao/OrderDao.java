@@ -6,6 +6,7 @@ import com.weiyebancai.warehouse.pagemodel.DataResult;
 import com.weiyebancai.warehouse.pagemodel.Page;
 import com.weiyebancai.warehouse.pojo.OrderPO;
 import com.weiyebancai.warehouse.pojo.ProductPO;
+import com.weiyebancai.warehouse.pojo.ProductToOrderDTO;
 import com.weiyebancai.warehouse.pojo.SelectOrderDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -13,8 +14,10 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.BasicQuery;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -44,13 +47,18 @@ public class OrderDao {
         fieldsObject.put("remork", true);
         fieldsObject.put("createTime", true);
         fieldsObject.put("createUser", true);
+        fieldsObject.put("updateTime", true);
+        fieldsObject.put("productList", true);
         fieldsObject.put("state", true);
         Query query = new BasicQuery(dbObject, fieldsObject);
         if (selectOrderDTO.getNoteno() != null) {
-            query.addCriteria(Criteria.where("noteno").regex(".*?" + selectOrderDTO.getNoteno() + ".*"));
+            query.addCriteria(Criteria.where("noteno").is(selectOrderDTO.getNoteno()));
+        }
+        if (selectOrderDTO.getRemork() != null) {
+            query.addCriteria(Criteria.where("remork").regex(".*?" + selectOrderDTO.getRemork() + ".*"));
         }
         if (selectOrderDTO.getOrderState() != null) {
-            query.addCriteria(Criteria.where("state").regex(".*?" + selectOrderDTO.getOrderState() + ".*"));
+            query.addCriteria(Criteria.where("state").is(selectOrderDTO.getOrderState()));
         }
         //必传两段时间
         if (selectOrderDTO.getBeginTime() != null && selectOrderDTO.getEndTime() != null) {
@@ -81,5 +89,57 @@ public class OrderDao {
         dataResult.setPage(page);
         dataResult.setData(list);
         return dataResult;
+    }
+
+    /**
+     * 根据noteno查找订单
+     *
+     * @param orderId
+     * @return
+     */
+    public OrderPO selectOrderProduct(Long orderId) {
+        DBObject dbObject = new BasicDBObject();
+        Query query = new Query();
+        query.addCriteria(Criteria.where("noteno").is(orderId));
+        List<OrderPO> orderPOList = this.mongoTemplate.find(query, OrderPO.class);
+        if (orderPOList == null || orderPOList.size() == 0) {
+            throw new RuntimeException("找不到订单");
+        }
+        return orderPOList.get(0);
+    }
+
+    /**
+     * 订单商品修改
+     *
+     * @param orderId
+     * @param productPOList
+     */
+    public void updateOrderProduct(Long orderId, List<ProductPO> productPOList) {
+        Update update = new Update();
+        update.set("productList", productPOList);
+        update.set("updateTime", new Date());
+        mongoTemplate.updateFirst(new Query(Criteria.where("noteno").is(orderId)), update, OrderPO.class);
+    }
+
+    /**
+     * 根据noteno删除订单
+     *
+     * @param noteno
+     */
+    public void deleteOrder(Long noteno) {
+        mongoTemplate.remove(new Query(Criteria.where("noteno").is(noteno)), OrderPO.class);
+    }
+
+    /**
+     * 修改订单
+     *
+     * @param orderPO
+     */
+    public void updatOrder(OrderPO orderPO) {
+        Update update = new Update();
+        orderPO.setUpdateTime(new Date());
+        update.set("productList", orderPO.getProductList());
+        update.set("updateTime", orderPO.getUpdateTime());
+        mongoTemplate.updateFirst(new Query(Criteria.where("_id").is(orderPO.getId())), update, OrderPO.class);
     }
 }

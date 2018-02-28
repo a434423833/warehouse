@@ -10,7 +10,6 @@ import java.io.Serializable;
  * @author caohao 2018/2/8
  */
 public class ProductSelectDTO implements Serializable {
-
     /**
      * 产品名称
      */
@@ -101,4 +100,5 @@ public class ProductSelectDTO implements Serializable {
     public void setPage(Page page) {
         this.page = page;
     }
+
 }

@@ -17,6 +17,10 @@ public class SelectOrderDTO implements Serializable {
      */
     private Long noteno;
     /**
+     * 订单备注
+     */
+    private String remork;
+    /**
      * 下单开始时间
      */
     private Date beginTime;
@@ -40,20 +44,6 @@ public class SelectOrderDTO implements Serializable {
      * 分页对象
      */
     private Page page;
-
-    /**
-     * 获取 订单号
-     */
-    public Long getNoteno() {
-        return this.noteno;
-    }
-
-    /**
-     * 设置 订单号
-     */
-    public void setNoteno(Long noteno) {
-        this.noteno = noteno;
-    }
 
     /**
      * 获取 下单开始时间
@@ -137,5 +127,33 @@ public class SelectOrderDTO implements Serializable {
      */
     public void setPage(Page page) {
         this.page = page;
+    }
+
+    /**
+     * 获取 订单备注
+     */
+    public String getRemork() {
+        return this.remork;
+    }
+
+    /**
+     * 设置 订单备注
+     */
+    public void setRemork(String remork) {
+        this.remork = remork;
+    }
+
+    /**
+     * 获取 订单号
+     */
+    public Long getNoteno() {
+        return this.noteno;
+    }
+
+    /**
+     * 设置 订单号
+     */
+    public void setNoteno(Long noteno) {
+        this.noteno = noteno;
     }
 }

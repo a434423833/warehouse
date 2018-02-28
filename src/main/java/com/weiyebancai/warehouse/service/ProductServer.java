@@ -88,7 +88,6 @@ public class ProductServer {
      * @param recordCount
      * @param remark
      */
-    @Transactional
     public void insertRecord(String productId, Integer recordCount, String remark, String username) {
         ProductPO productPO = productDao.findOneProduct(productId);
         if (recordCount < 0 && productPO.getProductCount() + recordCount < 0 ? true : false) {

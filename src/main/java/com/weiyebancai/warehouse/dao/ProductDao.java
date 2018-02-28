@@ -100,6 +100,20 @@ public class ProductDao {
     }
 
     /**
+     * 通过产品id查找
+     *
+     * @param productId
+     */
+    public ProductPO selectProductById(String productId) {
+        Query query = new Query().addCriteria(Criteria.where("_id").is(productId));
+        List<ProductPO> list = this.mongoTemplate.find(query, ProductPO.class);
+        if (list == null || list.size() == 0) {
+            throw new RuntimeException("找不到产品");
+        }
+        return list.get(0);
+    }
+
+    /**
      * 查找商品库存变更记录
      *
      * @param productReocrdDTO
@@ -164,5 +178,17 @@ public class ProductDao {
      */
     public void delectRecord(String productId) {
         mongoTemplate.remove(new Query(Criteria.where("productId").is(productId)), RecordPO.class);
+    }
+
+    /**
+     * 批量查询商品
+     *
+     * @param list
+     * @return
+     */
+    public List<ProductPO> findProductById(List<String> list) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("_id").in(list));
+        return mongoTemplate.find(query, ProductPO.class);
     }
 }

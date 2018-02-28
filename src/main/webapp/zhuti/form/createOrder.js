@@ -13,9 +13,38 @@ function bodyonload() {
         str += "<option>" + data[i] + "</option> ";
     }
     $("#fatherleibie").html(str);
+    selectOrder()
     searchClick(1, 1);
 }
-
+function selectOrder() {
+    $.ajax({
+        type: "POST",      //传输方式
+        url: "../../selectOrder",
+        dataType: 'json',
+        contentType: 'application/json',
+        data: JSON.stringify({            //传递的参数
+            "orderState": "待确认",
+            "page": {
+                "pageNum": 1,
+                "pageSize": 20,
+                "orderBy": "asc"
+            }
+        }),
+        success: function (obj) {
+            if (obj.success == true) {
+                var str = "<option>请选择订单 </option>";
+                for (var i = 0; i < obj.data.length; i++) {
+                    str += "<option>" + obj.data[i].noteno + ";&nbsp;" + obj.data[i].remork + "</option>";
+                }
+                $("#selectorder").html(str);
+            }
+        },
+        error: function (data, type, err) {
+            $("#modelMsg").html(+data.responseJSON.status + ":" + data.responseJSON.message);
+            $('#myModal').modal();
+        }
+    });
+}
 function leimuchange(obj) {
     var index = obj.selectedIndex;
     var str = "";
@@ -68,14 +97,13 @@ function searchClick(pageNum, pages) {
                     str += "<tr  class='odd gradeX ng-scope'>" +
                         "<td class='ng-binding'>" + (i + 1 + (obj.page.pageNum - 1) * obj.page.pageSize) + "</td>" +
                         "<td  class='ng-binding'>" + obj.data[i].productCategory + "</td>" +
-                        "<td  class='ng-binding' id='productId" + obj.data[i].id + "'>" + obj.data[i].productName + "</td>" +
-                        "<td class='ng-binding'>" + obj.data[i].productCount + "</td>" +
-                        "<td class='ng-binding'>" + obj.data[i].productWarehouse + "</td>" +
+                        "<td  class='ng-binding' id='productname" + obj.data[i].id + "'>" + obj.data[i].productName + "</td>" +
+                        "<td class='ng-binding'  id='productcount" + obj.data[i].id + "'>" + obj.data[i].productCount + "</td>" +
+                        "<td  class='ng-binding'>" + obj.data[i].productWarehouse + "</td>" +
                         "<td class='ng-binding'>" + obj.data[i].productBrand + " </td>" +
                         "<td class='ng-binding'>" +
-                        "<a class='btn btn-info btn-xs' href='../main/selectrocord.html?id=" + obj.data[i].id + "'> 库存变更明细</a >&nbsp;&nbsp;&nbsp; " +
-                        "<a class='btn btn-primary btn-xs' onclick='getId(&apos;" + obj.data[i].id + "&apos;)'>变更库存</a>&nbsp;&nbsp;&nbsp;" +
-                        "<a class='btn btn-danger btn-xs' onclick='getIdForDel(&apos;" + obj.data[i].id + "&apos;)'>删除</a></td></tr>";
+                        "<a class='btn btn-info btn-xs' onclick=addProductToOrder('" + obj.data[i].id + "') >添加到订单" +
+                        "</td></tr>";
                 }
                 $("#selectBody").html(str);
                 if (str == "") {
@@ -107,33 +135,78 @@ function resetClick() {
     $("#productwarehouse").html("<option>请选择</option><option>店内</option><option>仓库</option>");
     $("#productbrand").val("");
 }
-
-var delectId;
-
-function getIdForDel(id) {
-    delectId = id;
-    $("#modelMsg2").html("是否删除<span style='color: red'>" + $("#productId" + delectId).html() + "</span>该商品库存");
-    $("#myModal2").modal();
-}
-
-function ondelectproduct(thisobj) {
-    $(thisobj).attr("disabled", true); //设置变灰按钮
+function onCreateOrder(thisobj) {
+    var remork = $("#createremork").val();
+    if (remork == null || remork == undefined || remork.length <= 0) {
+        $("#createOutStockTishi").html("请填写备注");
+        return;
+    }
+    $(thisobj).attr("disabled", "disabled"); //设置变灰按钮
     $.ajax({
-        type: "POST",      //传输方式
-        url: "../../delectProduct", //地址
+        type: "GET",      //传输方式
+        url: "../../createOrder", //地址
+        dataType: 'json',
+        contentType: 'application/json',
         data: {            //传递的参数
-            "productId": delectId
+            "remork": remork
         },
         success: function (obj) {
             $(thisobj).attr("disabled", false);
-            $("#myModal2").modal('hide');
-            searchClick($("#dangqianpage").html(), $("#dangqianpage").html());
+            $("#myModal1").modal('hide');
+            selectOrder();
         },
         error: function (data, type, err) {
-            $(thisobj).attr("disabled", false); //设置变灰按钮
-            $("#myModal2").modal('hide');
             $("#modelMsg").html(+data.responseJSON.status + ":" + data.responseJSON.message);
+            $(thisobj).attr("disabled", false);
             $('#myModal').modal();
+            $("#myModal1").modal('hide');
+        }
+    });
+}
+var productId = null;
+function addProductToOrder(id) {
+    productId = id;
+    $("#msg3").html("");
+    $("#msg3count").val("");
+    $("#msg3Name").html($("#productname" + id).html());
+    $("#msg3order").html($("#selectorder").val());
+    $("#myModal3").modal();
+}
+function mag3addProduct(thisobj) {
+    var order = $("#msg3order").html();
+    var count = $("#msg3count").val();
+    if (order == null || order == "" || order == undefined || order == "请选择订单") {
+        $("#msg3").html("没有选择订单");
+        return;
+    }
+    if (count == null || count == "" || count == undefined) {
+        $("#msg3").html("请选择商品数量");
+        return;
+    }
+    if (count > parseInt($("#productcount" + productId).html())) {
+        $("#msg3").html("该商品库存不够,只有" + $("#productcount" + productId).html() + "个");
+        return;
+    }
+    $(thisobj).attr("disabled", true);
+    $.ajax({
+        type: "POST",      //传输方式
+        url: "../../addProductToOrder", //地址
+        dataType: 'json',
+        contentType: 'application/json',
+        data: JSON.stringify({            //传递的参数
+            "productId": productId,
+            "orderId": order.substr(0, order.indexOf(';')),
+            "productRecord": count
+        }),
+        success: function (obj) {
+            $("#myModal3").modal('hide');
+            $(thisobj).attr("disabled", false);
+        },
+        error: function (data, type, err) {
+            $("#modelMsg").html(+data.responseJSON.status + ":" + data.responseJSON.message);
+            $(thisobj).attr("disabled", false);
+            $('#myModal').modal();
+            $("#myModal3").modal('hide');
         }
     });
 }

@@ -19,6 +19,7 @@ public class MyWebUserInterceptor extends WebMvcConfigurerAdapter {
         InterceptorRegistration ir = registry.addInterceptor(new UserInterceptor());
         ir.addPathPatterns("/insertProduct");
         ir.addPathPatterns("/delectProduct");
+        ir.addPathPatterns("/delectOrder");
         InterceptorRegistration ira = registry.addInterceptor(new UserAuthInterceptor());
         ira.excludePathPatterns("/userLogin");
         ira.excludePathPatterns("/");

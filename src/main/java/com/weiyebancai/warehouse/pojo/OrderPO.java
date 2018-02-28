@@ -5,6 +5,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 订单po
@@ -38,6 +39,14 @@ public class OrderPO implements Serializable {
      * 订单状态
      */
     private String state;
+    /**
+     * 订单修改时间
+     */
+    private Date updateTime;
+    /**
+     * 产品
+     */
+    private List<ProductPO> productList;
 
     /**
      * 获取 主键id
@@ -121,5 +130,33 @@ public class OrderPO implements Serializable {
      */
     public void setCreateUser(String createUser) {
         this.createUser = createUser;
+    }
+
+    /**
+     * 获取 产品
+     */
+    public List<ProductPO> getProductList() {
+        return this.productList;
+    }
+
+    /**
+     * 设置 产品
+     */
+    public void setProductList(List<ProductPO> productList) {
+        this.productList = productList;
+    }
+
+    /**
+     * 获取 订单修改时间
+     */
+    public Date getUpdateTime() {
+        return this.updateTime;
+    }
+
+    /**
+     * 设置 订单修改时间
+     */
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }
