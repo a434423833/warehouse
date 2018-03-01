@@ -1,5 +1,6 @@
 package com.weiyebancai.warehouse.controller;
 
+import com.sun.org.apache.xpath.internal.operations.Or;
 import com.weiyebancai.warehouse.pagemodel.BaseResult;
 import com.weiyebancai.warehouse.pagemodel.DataResult;
 import com.weiyebancai.warehouse.pojo.OrderPO;
@@ -97,5 +98,32 @@ public class OrderController {
         List<ProductPO> productList = orderPO.getProductList();
         orderServer.updateOrder(orderPO);
         return new BaseResult();
+    }
+
+    /**
+     * 修改订单状态
+     *
+     * @param noteno
+     * @param state
+     * @return
+     */
+    @RequestMapping(value = "/updateOrderState", method = RequestMethod.POST)
+    public BaseResult updateOrderState(Long noteno, String state) {
+        Assert.notNull(noteno, "订单号不能为null");
+        Assert.notNull(state, "修改状态不能为null");
+        return orderServer.updateOrderState(noteno, state);
+    }
+
+    /**
+     * 出库
+     *
+     * @param orderPO
+     * @return
+     */
+    @RequestMapping(value = "/stock", method = RequestMethod.POST)
+    public BaseResult stock(@RequestBody OrderPO orderPO, HttpSession session) {
+        Assert.notNull(orderPO.getNoteno(), "订单号不能为null");
+        Assert.notNull(orderPO.getProductList(), "没有产品无法出库");
+        return orderServer.stock(orderPO, GetObjectUtil.getUserName(session));
     }
 }

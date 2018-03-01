@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -35,7 +36,6 @@ public class ProductServer {
      *
      * @param productDTO
      */
-    @Transactional
     public void insertProduct(ProductDTO productDTO, UserVO userVO) {
         ProductPO productPO = new ProductPO();
         BeanUtils.copyProperties(productDTO, productPO);
@@ -50,7 +50,9 @@ public class ProductServer {
         po.setBeginCount(0);
         po.setEndCount(po.getRecordCount());
         po.setRemark("[管理员]手动添加");
-        productDao.insertRecord(po);
+        List<RecordPO> list = new ArrayList<>();
+        list.add(po);
+        productDao.insertRecord(list);
 
     }
 
@@ -100,11 +102,15 @@ public class ProductServer {
         po.setRecordCount(recordCount);
         po.setEndCount(productPO.getProductCount() + recordCount);
         po.setTime(new Date());
-        po.setIncident("手动操作修改");
+        po.setIncident("[手动操作修改]");
         po.setUserName(username);
-        productDao.insertRecord(po);
+        ArrayList<RecordPO> list = new ArrayList<>();
+        list.add(po);
+        productDao.insertRecord(list);
         productPO.setProductCount(productPO.getProductCount() + recordCount);
-        productDao.updateProduct(productPO);
+        List<ProductPO> productPOList = new ArrayList<>();
+        productPOList.add(productPO);
+        productDao.updateProduct(productPOList);
     }
 
     /**

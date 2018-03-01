@@ -5,6 +5,16 @@ function bodyonloadOrder(obj) {
         str += "<option>" + data[i] + "</option> ";
     }
     $("#orderstate").html(str);
+    var selectOrder = JSON.parse(sessionStorage.getItem("selectOrder"));
+    //保证返回时拿到数据
+    if (selectOrder != null) {
+        $("#noteno").val(selectOrder.noteno);
+        $("#beginTime").val(selectOrder.beginTime);
+        $("#endTime").val(selectOrder.endTime);
+        $("#orderstate")[0].selectedIndex = selectOrder.orderState;
+        $("#beginmoney").val(selectOrder.beginMoney);
+        $("#endmoney").val(selectOrder.endMoney);
+    }
     searchClickOrder(1, 1);
 }
 function changestate() {
@@ -63,6 +73,7 @@ function searchClickOrder(pageNum, pages, noteno) {
                             "<td id='orderRemork" + data.noteno + "'>" + data.remork + "</td>" +
                             "<td>" + data.createUser + "</td>" +
                             "<td >" + formationDate(data.createTime) + "</td>" +
+                            "<td >" + data.stockUser + "</td>" +
                             "<td ng-bind='item.des' class='ng-binding'>" +
                             "<button class='btn btn-info btn-xs' onclick=selectOrderItem(" + i + ")> 查看订单详细</button> "
                         ;
@@ -132,6 +143,15 @@ function resetClickOrder() {
 }
 function selectOrderItem(index) {
     sessionStorage.setItem("item", JSON.stringify(objdata[index]));
+    var select = {
+        "noteno": $("#noteno").val(),
+        "beginTime": $("#beginTime").val(),
+        "endTime": $("#endTime").val(),
+        "orderState": $("#orderstate").get(0).selectedIndex,
+        "beginMoney": $("#beginmoney").val(),
+        "endMoney": $("#endmoney").val()
+    };
+    sessionStorage.setItem("selectOrder", JSON.stringify(select));
     window.location.href = 'orderitem.html';
 }
 

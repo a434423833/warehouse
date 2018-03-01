@@ -44,6 +44,10 @@ public class OrderPO implements Serializable {
      */
     private Date updateTime;
     /**
+     * 出库人
+     */
+    private String stockUser;
+    /**
      * 产品
      */
     private List<ProductPO> productList;
@@ -158,5 +162,19 @@ public class OrderPO implements Serializable {
      */
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    /**
+     * 获取 出库人
+     */
+    public String getStockUser() {
+        return this.stockUser;
+    }
+
+    /**
+     * 设置 出库人
+     */
+    public void setStockUser(String stockUser) {
+        this.stockUser = stockUser;
     }
 }

@@ -17,6 +17,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -42,11 +43,13 @@ public class ProductDao {
     /**
      * 添加商品库存变更记录
      *
-     * @param po
+     * @param poList
      */
-    public void insertRecord(RecordPO po) {
-        po.setTime(new Date());
-        mongoTemplate.save(po);
+    public void insertRecord(List<RecordPO> poList) {
+        for (RecordPO po : poList) {
+            po.setTime(new Date());
+            mongoTemplate.save(po);
+        }
     }
 
     /**
@@ -152,14 +155,18 @@ public class ProductDao {
     /**
      * 修改库存商品库存
      *
-     * @param productPO
+     * @param productPOList
      */
-    public void updateProduct(ProductPO productPO) {
-        Update update = new Update();
-        productPO.setUpdateTime(new Date());
-        update.set("productCount", productPO.getProductCount());
-        update.set("updateTime", productPO.getUpdateTime());
-        mongoTemplate.updateFirst(new Query(Criteria.where("id").is(productPO.getId())), update, ProductPO.class);
+    public void updateProduct(List<ProductPO> productPOList) {
+        for (ProductPO productPO : productPOList) {
+            Update update = new Update();
+            productPO.setUpdateTime(new Date());
+            update.set("productCount", productPO.getProductCount());
+            update.set("updateTime", new Date());
+            Query query = new Query();
+            query.addCriteria(Criteria.where("_id").is(productPO.getId()));
+            mongoTemplate.updateMulti(new Query(Criteria.where("_id").is(productPO.getId())), update, ProductPO.class);
+        }
     }
 
     /**

@@ -143,7 +143,7 @@
 <script type="text/javascript">
     function bodyonload() {
         var url = location.search;
-        var id = url.substring(4, url.length);
+        var id = sessionStorage.getItem("productId");
         selectRecord(id, 1, 1);
     }
 

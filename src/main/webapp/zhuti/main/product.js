@@ -13,6 +13,15 @@ function bodyonload() {
         str += "<option>" + data[i] + "</option> ";
     }
     $("#fatherleibie").html(str);
+    var selectProduct = JSON.parse(sessionStorage.getItem("selectProduct"));
+    if (selectProduct != null) {
+        $("#productName").val(selectProduct.productName);
+        $("#productbrand").val(selectProduct.productbrand);
+        $("#fatherleibie")[0].selectedIndex = selectProduct.fatherleibie;
+        leimuchange($("#fatherleibie")[0]);
+        $("#chirdleibie")[0].selectedIndex = selectProduct.chirdleibie;
+        $("#productwarehouse")[0].selectedIndex = selectProduct.productWarehouse;
+    }
     searchClick(1, 1);
 }
 
@@ -73,7 +82,7 @@ function searchClick(pageNum, pages) {
                         "<td class='ng-binding'>" + obj.data[i].productWarehouse + "</td>" +
                         "<td class='ng-binding'>" + obj.data[i].productBrand + " </td>" +
                         "<td class='ng-binding'>" +
-                        "<a class='btn btn-info btn-xs' href='../main/selectrocord.html?id=" + obj.data[i].id + "'> 库存变更明细</a >&nbsp;&nbsp;&nbsp; " +
+                        "<a class='btn btn-info btn-xs' onclick='selectrocord(&apos;" + obj.data[i].id + "&apos;)'> 库存变更明细</a >&nbsp;&nbsp;&nbsp; " +
                         "<a class='btn btn-primary btn-xs' onclick='getId(&apos;" + obj.data[i].id + "&apos;)'>变更库存</a>&nbsp;&nbsp;&nbsp;" +
                         "<a class='btn btn-danger btn-xs' onclick='getIdForDel(&apos;" + obj.data[i].id + "&apos;)'>删除</a></td></tr>";
                 }
@@ -95,7 +104,18 @@ function searchClick(pageNum, pages) {
     });
 
 }
-
+function selectrocord(productId) {
+    var select = {
+        "productName": $("#productName").val(),
+        "productbrand": $("#productbrand").val(),
+        "fatherleibie": $("#fatherleibie").get(0).selectedIndex,
+        "chirdleibie": $("#chirdleibie").get(0).selectedIndex,
+        "productWarehouse": $("#productwarehouse").get(0).selectedIndex
+    };
+    sessionStorage.setItem("selectProduct", JSON.stringify(select));
+    sessionStorage.setItem("productId", productId);
+    window.location.href = 'selectrocord.html';
+}
 function resetClick() {
     $("#productName").val("");
     var str = "";

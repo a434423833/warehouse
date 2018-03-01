@@ -37,6 +37,7 @@ function selectOrder() {
                     str += "<option>" + obj.data[i].noteno + ";&nbsp;" + obj.data[i].remork + "</option>";
                 }
                 $("#selectorder").html(str);
+                $("#selectorder")[0].selectedIndex = 1;
             }
         },
         error: function (data, type, err) {
@@ -181,6 +182,10 @@ function mag3addProduct(thisobj) {
     }
     if (count == null || count == "" || count == undefined) {
         $("#msg3").html("请选择商品数量");
+        return;
+    }
+    if (count < 1) {
+        $("#msg3").html("商品数量必须大于0");
         return;
     }
     if (count > parseInt($("#productcount" + productId).html())) {

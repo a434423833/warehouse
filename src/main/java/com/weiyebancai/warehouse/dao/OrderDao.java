@@ -44,6 +44,7 @@ public class OrderDao {
         BasicDBObject fieldsObject = new BasicDBObject();
         fieldsObject.put("_id", true);
         fieldsObject.put("noteno", true);
+        fieldsObject.put("stockUser", true);
         fieldsObject.put("remork", true);
         fieldsObject.put("createTime", true);
         fieldsObject.put("createUser", true);
@@ -98,7 +99,6 @@ public class OrderDao {
      * @return
      */
     public OrderPO selectOrderProduct(Long orderId) {
-        DBObject dbObject = new BasicDBObject();
         Query query = new Query();
         query.addCriteria(Criteria.where("noteno").is(orderId));
         List<OrderPO> orderPOList = this.mongoTemplate.find(query, OrderPO.class);
@@ -140,6 +140,21 @@ public class OrderDao {
         orderPO.setUpdateTime(new Date());
         update.set("productList", orderPO.getProductList());
         update.set("updateTime", orderPO.getUpdateTime());
-        mongoTemplate.updateFirst(new Query(Criteria.where("_id").is(orderPO.getId())), update, OrderPO.class);
+        mongoTemplate.updateFirst(new Query(Criteria.where("noteno").is(orderPO.getNoteno())), update, OrderPO.class);
+    }
+
+    /**
+     * 修改订单状态
+     */
+    public void updateOrderState(Long noteno, String state, String stockUser) {
+        OrderPO orderPO = new OrderPO();
+        Update update = new Update();
+        orderPO.setUpdateTime(new Date());
+        if (stockUser != null) {
+            update.set("stockUser", stockUser);
+        }
+        update.set("state", state);
+        update.set("updateTime", orderPO.getUpdateTime());
+        mongoTemplate.updateFirst(new Query(Criteria.where("noteno").is(noteno)), update, OrderPO.class);
     }
 }
